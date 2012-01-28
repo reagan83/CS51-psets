@@ -1,22 +1,5 @@
-PROG = prog
-SOURCES = helpers.ml auction.ml driver.ml
-OBJECTS = $(SOURCES:.ml=.cmo)
-
-CAMLC = ocamlc
-
-.PHONY: build run clean
-.DEFAULT: build
-
-%.cmo : %.ml
-	$(CAMLC) -c $<
-
-build: clean $(PROG)
-
-$(PROG): $(OBJECTS)
-	$(CAMLC) -o $(PROG) $(OBJECTS)
-
-run: build
-	@./$(PROG)
+all: ps1.ml
+	ocamlc -o ps1 ps1.ml
 
 clean:
 	rm -r *.cmo *.cmi $(PROG)
