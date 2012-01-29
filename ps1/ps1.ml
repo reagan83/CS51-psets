@@ -177,7 +177,7 @@ assert ((merge [1] [-1]) = [-1;1]) ;;
 
 (* variance lst should be a function that returns None if lst has fewer than 2
 floats, and Some of the variance of the floats in lst otherwise.  Recall that
-the variance of a sequence of numbers is 1/n * sum (x_i-m)^2, where
+the variance of a sequence of numbers is 1/(n-1) * sum (x_i-m)^2, where
  a^2 means a squared, and m is the arithmetic mean of the list (sum of list /
 length of list).  For example,
  - variance [1.0; 2.0; 3.0; 4.0; 5.0] = Some 2.5
