@@ -82,7 +82,7 @@ let prob2b : (student list option * int) list =
 
 (*>* Problem 2c *>*)
 (*
-let prob2c : (int * int -> int) * (float -> float -> ()) * bool  =
+let prob2c : (int * int -> int) * (float -> float -> unit) * bool  =
   ???
 ;;
 *)
