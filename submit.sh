@@ -1,4 +1,4 @@
-/bin/sh
+#!/bin/sh
 
 die () {
 	echo "$0: error: $*" >&2
