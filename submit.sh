@@ -1,4 +1,4 @@
-#!/bin/sh
+/bin/sh
 
 die () {
 	echo "$0: error: $*" >&2
@@ -7,7 +7,7 @@ die () {
 
 echo "CS51: Submitting Problem Set $1"
 
-git commit -m"Done with ps$1.  Ready to submit." || die "commit failed"
+git commit -a -m"Done with ps$1.  Ready to submit." || die "commit failed"
 git tag -f ps$1-submission || die "tagging failed"
 git push --tags || die "pushing failed"
 
