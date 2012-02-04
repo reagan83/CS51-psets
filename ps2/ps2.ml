@@ -368,7 +368,7 @@ let encrypt (n: bignum) (e: bignum) (s: string) =
 
 (* Decrypt an encrypted message (list of bignums) to produce the 
  * original string. *)
-let decrypt (n: bignum) (d: bignum) (m: bignums list) =
+let decrypt (n: bignum) (d: bignum) (m: bignum list) =
   raise ImplementMe
 ;;
 
