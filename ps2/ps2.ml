@@ -91,6 +91,7 @@ let toString (b: bignum): string =
       "0"^(pad_with_zeroes_left s (len - 1))
   in
   let rec stripstrzeroes (s: string) (c: char) =
+    if String.length s = 0 then "0" else
     if (String.get s 0) = '0' then 
       stripstrzeroes (String.sub s 1 ((String.length s) - 1)) c
     else s
@@ -101,8 +102,10 @@ let toString (b: bignum): string =
       | h::t -> (pad_with_zeroes_left (string_of_int h) (intlog base))^
           (coeffs_to_string t)
   in
-  let from_coeffs = stripstrzeroes (coeffs_to_string b.coeffs) '0' in
-    if b.neg then "~"^from_coeffs else from_coeffs
+  let stripped = stripzeroes b.coeffs in
+    if List.length stripped = 0 then "0" else
+      let from_coeffs = stripstrzeroes (coeffs_to_string stripped) '0' in
+        if b.neg then "~"^from_coeffs else from_coeffs
 ;;
 
 (*>* Problem 1.3 *>*)
