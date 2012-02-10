@@ -7,8 +7,11 @@ die () {
 
 echo "CS51: Submitting Problem Set $1"
 
-git commit -a -m"Done with ps$1.  Ready to submit." || die "commit failed"
+echo "Committing..."
+git commit -a -m"Done with ps$1.  Ready to submit."
+echo "Tagging..."
 git tag -f ps$1-submission || die "tagging failed"
+echo "Pushing..."
 git push --tags || die "pushing failed"
 
 echo "Submission complete."
