@@ -682,7 +682,16 @@ struct
   (* Takes a tree, and returns the item that was most recently inserted into
    * that tree, as well as the queue that results from removing that element.
    * Notice that a queue is returned (since removing an element from just a leaf
-   * would result in an empty case, which is captured by the queue type *)
+   * would result in an empty case, which is captured by the queue type 
+   *
+   * CLARIFICATION: By "item most recently inserted", we don't mean the
+   * most recently inserted *value*, but rather the newest node that was
+   * added to the bottom-level of the tree. If you follow the implementation
+   * of add carefully, you'll see that the newest value may end up somewhere
+   * in the middle of the tree, but there is always *some* value brought
+   * down into a new node at the bottom of the tree. *This* is the node
+   * that we want you to return.
+   *)
   let rec get_last (t : tree) : elt * queue = raise ImplementMe
 
   (* Implements the algorithm described in the writeup. You must finish this
