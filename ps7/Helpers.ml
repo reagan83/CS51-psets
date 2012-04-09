@@ -77,9 +77,14 @@ struct
   (***** Random Value Helpers *****)
   (********************************)
 
+  (** call f with probability (1/p) and g if f is not called *)
+  let with_inv_probability_or (r:int->int) (p:int) 
+                              (f:unit->unit) (g:unit->unit) : unit =
+    if r p = 0 then f () else g ()
+
   (** Call f with probability (1/p) (using r to generate random numbers) *)
   let with_inv_probability (r:int->int) (p:int) (f:unit->unit) : unit = 
-    if r p = 0 then f ()
+    with_inv_probability_or r p f (fun () -> ())
 
   (** Call one of the functions in the list with equal probability. *)
   let with_equal_probability (r:int->int) (fs:(unit -> unit) list) : unit =

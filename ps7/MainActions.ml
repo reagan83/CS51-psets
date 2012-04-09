@@ -23,7 +23,7 @@ let gen_flowers () =
   let pollen_id = ref (-1) in
   World.spawn_iter num_flowers flower_size 
                    (fun () -> pollen_id := get_next_pollen_id ())
-                   (fun p -> ignore (new flower p !pollen_id))
+                   (fun p -> ignore (new flower p))
 
 let run () = 
   UI.run_world 
