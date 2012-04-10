@@ -79,7 +79,7 @@ struct
 
   (** call f with probability (1/p) and g if f is not called *)
   let with_inv_probability_or (r:int->int) (p:int) 
-                              (f:unit->unit) (g:unit->unit) : unit =
+                              (f:unit->'a) (g:unit->'a) : 'a =
     if r p = 0 then f () else g ()
 
   (** Call f with probability (1/p) (using r to generate random numbers) *)
