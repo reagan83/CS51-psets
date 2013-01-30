@@ -1,4 +1,4 @@
-(* CS51 Spring 2010
+(* CS51 Spring 2012
  * PS 0 *)
 
 (* 1. Please define these variables with the appropriate values.
@@ -25,14 +25,14 @@ let exciting : string = "I'm excited about ....!";;
 
 let print = Printf.printf;;
 
-let print_survey = 
+let print_survey () = 
   let (first, last) = name in
   let string_year = 
     (match class_year with
-       | Freshman -> "2015"
-       | Sophomore -> "2014"
-       | Junior -> "2013"
-       | Senior -> "2012"
+       | Freshman -> "2016"
+       | Sophomore -> "2015"
+       | Junior -> "2014"
+       | Senior -> "2013"
        | Other s -> "Other: " ^ s
     ) in
     (print "----------------------------------------\n";
@@ -42,7 +42,7 @@ let print_survey =
      print "----------------------------------------\n\n";);;
 
 
-print_survey;;
+print_survey ();;
 
 (* type "make" to compile the file.
   type ./survey to run the program and print the output.  
