@@ -1,5 +1,5 @@
-(* CS51 Spring 2012
- * PS 0 *)
+(* CS51 Spring 2013
+ * Problem Set 0 *)
 
 (* 1. Please define these variables with the appropriate values.
  * Be sure that these statements all type-check after editing them.
