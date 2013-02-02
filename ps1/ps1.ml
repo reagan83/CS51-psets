@@ -1,5 +1,4 @@
 (*** CS 51 Problem Set 1 ***)
-(*** January 28, 2012 ***)
 (*** YOUR NAME HERE ***)
 
 (* Problem 1 - Fill in types:
