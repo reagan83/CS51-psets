@@ -210,7 +210,7 @@ let rec divmod (b1: bignum) (b2: bignum): bignum * bignum =
     divmod_rec b1 b2 (fromInt 0)
 
 
-(* Problem 2 *)
+(**************************** Part 2: RSA *********************************)
 
 (** Support code for RSA **)
 (* Returns a random bignum from 0 to bound - 1 (inclusive). *)
@@ -365,8 +365,8 @@ let decrypt (n: bignum) (d: bignum) (m: bignum list) =
   raise ImplementMe
 ;;
 
-(*>* Problem 3 *>*)
-(* Challenge! (see writeup) *)
+(**************************** Part 3: Challenge *********************************)
+
 (* Returns a bignum representing b1*b2 *)
 let times_faster (b1: bignum) (b2: bignum) : bignum =
   raise ImplementMe
