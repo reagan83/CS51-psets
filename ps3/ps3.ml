@@ -168,6 +168,15 @@ let times (b1: bignum) (b2: bignum) : bignum =
   raise ImplementMe
 ;;
 
+let clean (b : bignum) : bignum = 
+  {neg = b.neg; coeffs = b.coeffs}
+;;
+
+let bytesInKey (n: bignum) =
+  int_of_float ((float_of_int ((List.length (stripzeroes n.coeffs)) - 1)) 
+                *. (log10 (float_of_int base)) /. ((log10 2.) *. 8.))
+;;
+
 (* Returns a bignum representing b/n, where n is an integer less than base *)
 let divsing (b: int list) (n: int) : int list * int =
   let rec divsing_rec (b: int list) (r: int) : int list * int =
@@ -188,6 +197,7 @@ let divsing (b: int list) (n: int) : int list * int =
 
 (* Returns a pair (floor of b1/b2, b1 mod b2), both bignums *)
 let rec divmod (b1: bignum) (b2: bignum): bignum * bignum =
+  let clean_b1, clean_b2 = clean b1, clean b2 in
   let rec divmod_rec m n (psum: bignum) : bignum * bignum =
     if less m n then (psum, m) else
       let mc = m.coeffs in
@@ -207,7 +217,7 @@ let rec divmod (b1: bignum) (b2: bignum): bignum * bignum =
           let p2 = if equal bp (fromInt 0) then (fromInt 1) else bp in
             divmod_rec (plus m (negate (times n p2))) n (plus psum p2)
   in
-    divmod_rec b1 b2 (fromInt 0)
+    divmod_rec clean_b1 clean_b2 (fromInt 0)
 
 
 (**************************** Part 2: RSA *********************************)
@@ -220,43 +230,47 @@ let randbignum (bound: bignum) =
       | [] -> []
       | [h] -> if h = 0 then [] else [Random.int h]
       | _::t -> (Random.int base)::(randbignum_rec t)
-  in {neg = false; coeffs = List.rev (randbignum_rec (List.rev bound.coeffs))}
+  in {neg = false; coeffs = stripzeroes (List.rev (randbignum_rec (List.rev bound.coeffs)))}
 ;;
 
 (* Returns b to the power of e mod m *)
 let rec expmod (b: bignum) (e: bignum) (m: bignum): bignum =
-  if equal e (fromInt 0) then (fromInt 1) else if equal e (fromInt 1) then 
-    let (_, x) = divmod b m in x
+  let clean_b, clean_e, clean_m = clean b, clean e, clean m in
+  if equal clean_e (fromInt 0) then (fromInt 1) else if equal clean_e (fromInt 1) then 
+    let (_, x) = divmod clean_b clean_m in x
   else 
-    let (q, r) = divmod e (fromInt 2) in
-    let res = expmod b q m in
-    let (_, x) = divmod (times (times res res) (expmod b r m)) m in 
+    let (q, r) = divmod clean_e (fromInt 2) in
+    let res = expmod clean_b q clean_m in
+    let (_, x) = divmod (times (times res res) (expmod clean_b r clean_m)) clean_m in 
       {neg = x.neg; coeffs = stripzeroes x.coeffs}
 
 (* Returns b to the power of e *)
 let rec exponent (b: bignum) (e: bignum): bignum =
-  if equal e (fromInt 0) then (fromInt 1) else if equal e (fromInt 1) then b
+  let clean_e, clean_b = clean e, clean b in
+  if equal clean_e (fromInt 0) then (fromInt 1) else if equal clean_e (fromInt 1) 
+  then clean_b
   else 
-    let (q, r) = divmod e (fromInt 2) in
-    let res = exponent b q in
-    let exp = (times (times res res) (exponent b r))
+    let (q, r) = divmod clean_e (fromInt 2) in
+    let res = exponent clean_b q in
+    let exp = (times (times res res) (exponent clean_b r))
     in {neg = exp.neg; coeffs = stripzeroes exp.coeffs}
 
 (* Returns true if n is prime, false otherwise. *)
 let isPrime (n: bignum): bool =
+  let clean_n = clean n in
   let rec miller_rabin (k: int) (d: bignum) (s: int): bool =
     if k < 0 then true else
     let rec square (r: int) (x: bignum) =
       if r >= s then false else
-      let x = expmod x (fromInt 2) n in
+      let x = expmod x (fromInt 2) clean_n in
         
         if equal x (fromInt 1) then false
-        else if equal x (plus n (fromInt (-1))) then miller_rabin (k-1) d s
+        else if equal x (plus clean_n (fromInt (-1))) then miller_rabin (k-1) d s
         else square (r + 1) x
     in
     let a = plus (randbignum (plus n (fromInt (-4)))) (fromInt 2) in
     let x = expmod a d n in
-      if (equal x (fromInt 1)) || (equal x (plus n (fromInt (-1)))) then 
+      if (equal x (fromInt 1)) || (equal x (plus clean_n (fromInt (-1)))) then 
         miller_rabin (k - 1) d s
       else square 1 x
   in 
@@ -267,15 +281,16 @@ let isPrime (n: bignum): bool =
   in
   let (_, r) = divmod n (fromInt 2) in
     if equal r (fromInt 0) then false else
-      let (d, s) = factor (plus n (fromInt (-1))) 0 in
+      let (d, s) = factor (plus clean_n (fromInt (-1))) 0 in
         miller_rabin 20 d s
 
 (* Returns (s, t, g) such that g is gcd(m, d) and s*m + t*d = g *)
 let rec euclid (m: bignum) (d: bignum) : bignum * bignum * bignum =
-  if equal d (fromInt 0) then (fromInt 1, fromInt 0, m)
+  let clean_m, clean_d = clean m, clean d in
+  if equal clean_d (fromInt 0) then (fromInt 1, fromInt 0, m)
   else
-    let (q, r) = divmod m d in
-    let (s, t, g) = euclid d r in 
+    let (q, r) = divmod clean_m clean_d in
+    let (s, t, g) = euclid clean_d r in 
       (t, plus s (negate (times q t)), g)
 ;;
 
@@ -339,10 +354,6 @@ let rec bignumsToChars (lst: bignum list) : char list =
 ;;
 
 (* Return the number of bytes required to represent an RSA modulus. *)
-let bytesInKey (n: bignum) =
-  int_of_float ((float_of_int ((List.length (stripzeroes n.coeffs)) - 1)) 
-                /. ((log10 2.) *. 8.))
-;;
 
 (* Encrypts or decrypts a list of bignums using RSA.
  * To encrypt, pass in n e lst.
