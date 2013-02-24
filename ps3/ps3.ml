@@ -150,9 +150,9 @@ let plus_pos (b1: bignum) (b2: bignum) : bignum =
             in (negres, result::coeffsres)
   in
   let (negres, coeffsres) = 
-        plus_with_carry (b1.neg, List.rev (stripzeroes b1.coeffs))
-          (b2.neg, List.rev (stripzeroes b2.coeffs)) 0
-  in {neg = negres; coeffs = List.rev coeffsres}
+        plus_with_carry (b1.neg, List.rev b1.coeffs)
+          (b2.neg, List.rev b2.coeffs) 0
+  in {neg = negres; coeffs = stripzeroes (List.rev coeffsres)}
 ;;
 
 (*>* Problem 1.4 *>*)
