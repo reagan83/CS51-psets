@@ -218,6 +218,7 @@ let rec divmod (b1: bignum) (b2: bignum): bignum * bignum =
             divmod_rec (plus m (negate (times n p2))) n (plus psum p2)
   in
     divmod_rec clean_b1 clean_b2 (fromInt 0)
+;;
 
 
 (**************************** Part 2: RSA *********************************)
