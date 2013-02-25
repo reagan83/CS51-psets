@@ -169,7 +169,7 @@ let times (b1: bignum) (b2: bignum) : bignum =
 ;;
 
 let clean (b : bignum) : bignum = 
-  {neg = b.neg; coeffs = b.coeffs}
+  {neg = b.neg; coeffs = stripzeroes b.coeffs}
 ;;
 
 let bytesInKey (n: bignum) =
