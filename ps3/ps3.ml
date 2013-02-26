@@ -172,6 +172,8 @@ let clean (b : bignum) : bignum =
   {neg = b.neg; coeffs = stripzeroes b.coeffs}
 ;;
 
+
+(* Return the number of bytes required to represent an RSA modulus. *)
 let bytesInKey (n: bignum) =
   int_of_float ((float_of_int ((List.length (stripzeroes n.coeffs)) - 1)) 
                 *. (log10 (float_of_int base)) /. ((log10 2.) *. 8.))
@@ -213,7 +215,7 @@ let rec divmod (b1: bignum) (b2: bignum): bignum * bignum =
               let num = take_first mc ((List.length mc) - (List.length nc) + 1)
               in divsing num den 
           in
-          let bp = {neg = false; coeffs = p} in
+          let bp = clean {neg = false; coeffs = p} in
           let p2 = if equal bp (fromInt 0) then (fromInt 1) else bp in
             divmod_rec (plus m (negate (times n p2))) n (plus psum p2)
   in
@@ -353,8 +355,6 @@ let rec bignumsToChars (lst: bignum list) : char list =
       | [] -> []
       | b::t -> (decbignum b)@(bignumsToChars t)
 ;;
-
-(* Return the number of bytes required to represent an RSA modulus. *)
 
 (* Encrypts or decrypts a list of bignums using RSA.
  * To encrypt, pass in n e lst.
