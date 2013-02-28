@@ -659,11 +659,9 @@ let selectionsort = sort list_module
 
 (*>* Problem N.0 *>*)
 (* *Highly recommended (and easy)* Challenge problem:
- * Above, we use a strange syntax for binding modules to variables so that we
- * could pass the modules to the function "sort". The *right* way of doing this
- * is to write a functor that takes in a module that matches the PRIOQUEUE
- * interface, and returns a module that has a "sort" function that you can use
- * on lists. Write this functor, and be sure to test it!
+ * Above, we only allow for sorting on int lists. Write a functor that will take
+ * a COMPARABLE_AND_GENABLE module as an argument, and allows for sorting on the
+ * type defined by that module. You should use your BinaryHeap module.
  *)
 
 (*>* Problem N.1 *>*)

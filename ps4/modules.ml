@@ -12,7 +12,7 @@ sig
     val max : float list -> float option
 end
 
-(* Write a module called Math that implements the MATH signature above *)
+(* Write a module (struct) called Math that implements the MATH signature *)
 
 
 

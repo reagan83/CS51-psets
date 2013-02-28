@@ -1,9 +1,3 @@
-(*****************************************************************************)
-(*                               Part 1                                      *)
-(*****************************************************************************)
-
-(** Problem 1: quick intro to modules; no points, but please read!! **)
-
 (* A type useful in comparing two values of the same type *)
 type order = Equal | Less | Greater
 
