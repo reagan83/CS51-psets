@@ -7,16 +7,16 @@
  * typing "make" in the terminal emulator *)
 
 (* 1.a. Replace FIRST and LAST with your first and last name *)
-let name : (string * string) = ("FIRST", "LAST");;
+let name : (string * string) = ("Arian Allenson", "Valdez");;
 
 (* 1.b. Replace "Other ..." in class_year with your current year that is of
  * type 'year' *)
 type year = Freshman | Sophomore | Junior | Senior | Other of string;;
 
-let class_year : year = Other "I haven't filled it in yet";;
+let class_year : year = Other "CS-Harvard";;
 
 (* 1.c. Replace the .... with what you're excited about in this course *)
-let exciting : string = "I'm excited about ....!";;
+let exciting : string = "I'm excited about learning this seemingly beautiful but esoteric language known as Ocaml!";;
 
 (* ***
    2. You shouldn't change anything below this line, but you should
