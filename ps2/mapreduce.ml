@@ -31,9 +31,12 @@ let rec reduce (f:'a -> 'b -> 'b) (u:'b) (xs:'a list) : 'b =
 
 (*  reduce_mine : Implement reduce using List.fold_right *)
 let reduce_mine (f:'a -> 'b -> 'b) (u:'b) (xs:'a list) : 'b =
-    raise (Failure "Not implemented")
+   List.fold_right f xs u
 ;;
 
+(* tests *)
+assert (reduce_mine (fun x y->x::y) [1;2;3] [4;5;6] = [4;5;6;1;2;3]);;
+assert (reduce_mine (fun x y->x::y) [4;5;6] [1;2;3] = [1;2;3;4;5;6]);;
 
 
 (****************************************************)
@@ -57,20 +60,24 @@ let reduce_mine (f:'a -> 'b -> 'b) (u:'b) (xs:'a list) : 'b =
 
 (*  negate_all : Flips the sign of each element in a list *)
 let negate_all (nums:int list) : int list =
-    raise (Failure "Not implemented")
+    List.map (fun x -> x * -1) nums
 ;;
 
 (* Unit test example. *)
 assert ((negate_all [1; -2; 0]) = [-1; 2; 0]) ;;
+assert ((negate_all [-1;-2;-3;0;1;2;3]) = [1;2;3;0;-1;-2;-3]) ;;
 
 
 (*>* Problem 1.2.b *>*)
 
 (*  sum : Returns the sum of the elements in the list. *)
 let sum (nums:int list) : int =
-    raise (Failure "Not implemented")
+    List.fold_right (fun x y-> x + y) nums 0
 ;;
 
+(* tests *)
+assert ((sum [1;2;3;4;5]) = 15);;
+assert ((sum [5;6;7]) = 18);;
 
 (*>* Problem 1.2.c *>*)
 
@@ -78,36 +85,52 @@ let sum (nums:int list) : int =
  *             Returns a one-dimensional list of ints, each int equal to the
  *             sum of the corresponding row in the input.
  *   Example : sum_rows [[1;2]; [3;4]] = [3; 7] *)
-let sum_rows (rows:int list list) : int list =
-    raise (Failure "Not implemented")
+let sum_rows (rows:int list list) :int list=
+    List.map (fun x -> List.fold_right (fun x y -> x + y) x 0) rows
 ;;
 
+(* tests *)
+assert ((sum_rows [[1;2];[3;4]]) = [3;7]);;
+assert ((sum_rows [[1;2;3;4];[15;20]]) = [10;35]);;
 
 (*>* Problem 1.2.d *>*)
 
 (*  filter_odd : Retains only the odd numbers from the given list.
  *     Example : filter_odd [1;4;5;-3] = [1;5;-3]. *)
 let filter_odd (nums:int list) : int list =
-    raise (Failure "Not implemented")
+    List.filter (fun x-> x mod 2 <> 0) nums
 ;;
 
+(* tests *)
+assert ((filter_odd [1;2;3;4;5;6]) = [1;3;5]);;
+assert ((filter_odd [1;4;5;-3]) = [1;5;-3]);;
 
 (*>* Problem 1.2.e *>*)
 
 (*  num_occurs : Returns the number of times a given number appears in a list.
  *     Example : num_occurs 4 [1;3;4;5;4] = 2 *)
 let num_occurs (n:int) (nums:int list) : int =
-    raise (Failure "Not implemented")
+    List.length (List.filter (fun y-> y = n) nums)
 ;;
 
+(* tests *)
+assert ((num_occurs 4 [1;3;4;5;4]) = 2);;
+assert ((num_occurs (-3) [3;6;3;-3;-2;5-3]) = 2);;
 
 (*>* Problem 1.2.f *>*)
 
 (*  super_sum : Sums all of the numbers in a list of int lists
  *    Example : super_sum [[1;2;3];[];[5]] = 11 *)
-let super_sum (nlists:int list list) : int =
-    raise (Failure "Not implemented")
+let super_sum (nlists:int list list)(* : int*) =
+  let sum(nums:int list) : int =
+     List.fold_right (fun x y -> x + y) nums 0
+  in
+   sum (List.map(fun lst ->sum lst) nlists)
 ;;
+
+(* tests *)
+assert ((super_sum [[1;2;3];[];[5]]) = 11);;
+assert ((super_sum [[4;5];[4];[6;3;2];[2;4;3];[2;3]]) = 38);;
 
 (*>* Problem 1.2.g *>*)
 
@@ -115,7 +138,7 @@ let super_sum (nlists:int list list) : int =
  *                 given range (inclusive), in the same order they appeared
  *                 in the input list.
  *       Example : filter_range [1;3;4;5;2] (1,3) = [1;3;2] *)
-let filter_range (nums:int list) (range:int * int) : int list =
+sulet filter_range (nums:int list) (range:int * int) : int list =
     raise (Failure "Not implemented")
 ;;
 
@@ -130,9 +153,12 @@ let filter_range (nums:int list) (range:int * int) : int list =
 
 (*  floats_of_ints : Converts an int list into a list of floats *)
 let floats_of_ints (nums:int list) : float list =
-    raise (Failure "Not implemented")
+    List.map (fun n -> (float) n) nums
 ;;
 
+(* tests *)
+assert ((floats_of_ints [1;2;3;4;5;6]) = [1.;2.;3.;4.;5.;6.]);;
+assert ((floats_of_ints [2;6;2;1;7;5]) = [2.;7.;2.;1.;7.;5.]);;
 
 (*>* Problem 1.3.b *>*)
 
@@ -141,17 +167,26 @@ let floats_of_ints (nums:int list) : float list =
  *            numbers n <= 0, so undefined results should be None.
  *  Example : log10s [1.0; 10.0; -10.0] = [Some 0.; Some 1.; None] *)
 let log10s (lst: float list) : float option list =
-    raise (Failure "Not implemented")
+    List.map (fun f -> if f <= 0. then None else Some (log10 f)) lst
 ;;
-
+(* tests *)
+assert (log10s [1.0; 10.0; -10.0] = [Some 0.; Some 1.; None]);;
+assert (log10s [-2; -5] = [None;None]);;
 
 (*>* Problem 1.3.c *>*)
 
 (*  deoptionalize : Extracts values from a list of options.
  *        Example : deoptionalize [Some 3; None; Some 5; Some 10] = [3;5;10] *)
 let deoptionalize (lst:'a option list) : 'a list =
-    raise (Failure "Not implemented")
+    List.map (fun opt-> match opt with 
+                        |Some c->c
+                        |None->raise(Invalid_argument "None accessed-Deoptionalize")
+             ) (List.filter(fun x-> x <> None) lst)
 ;;
+
+(* tests *)
+assert (deoptionalize [Some 3; None; Some 5; Some 10] = [3;5;10]);;
+assert (deoptionalize [Some "World"; None; Some "Hello"] = ["World";"Hello"]);;
 
 
 (*>* Problem 1.3.d *>*)
@@ -159,45 +194,60 @@ let deoptionalize (lst:'a option list) : 'a list =
 (*  some_sum : Sums all of the numbers in a list of int options;
  *             ignores None values *)
 let some_sum (nums:int option list) : int =
-    raise (Failure "Not implemented")
+   sum (deoptionalize nums)
 ;;
 
+(* tests *)
+assert (some_sum [Some 3; Some 5; None; Some 10] = 18);;
+assert (some_sum [Some 2; None; None; None; Some 4] = 6);;
 
 (*>* Problem 1.3.e *>*)
 
 (*  mult_odds : Product of all of the odd members of a list.
  *    Example : mult_odds [1;3;0;2;-5] = -15 *)
 let mult_odds (nums:int list) : int =
-    raise (Failure "Not implemented")
+    List.fold_right (fun x y-> x * y) (filter_odd nums) 1
 ;;
+
+(* tests *)
+assert (mult_odds [1;3;0;2-5] = -15);;
+assert (mult_odds [6;2;1;2;5] = 5);;
 
 
 (*>* Problem 1.3.f *>*)
 
 (*  concat : Concatenates a list of lists. See the Ocaml library ref *)
 let concat (lists:'a list list) : 'a list =
-    raise (Failure "Not implemented")
+    List.fold_right (fun x y -> x @ y) lists []
 ;;
 
+(* tests *)
+assert (concat [[1;2;3];[1;2;3]] = List.concat [[1;2;3];[1;2;3]]);;
+assert (concat [[5;2;1];[2];[1;2;3];[2]] = List.concat [[5;2;1];[2];[1;2;3];[2]]);;
 
 (*>* Problem 1.3.g *>*)
 
 (* the student's name and year *)
-type name = string
-type year = int
-type student = name * year
+type name = string;;
+type year = int;;
+type student = name * year;;
 
 (*  filter_by_year : returns the names of the students in a given year
  *         Example : let students = [("Joe",2010);("Bob",2010);("Tom",2013)];;
  *                   filter_by_year students 2010 => ["Joe";"Bob"] *)
 let filter_by_year (slist:student list) (yr:year) : name list =
-    raise (Failure "Not implemented")
+    List.map (fun stnt-> match stnt with |(x,y)->x
+    ) (List.filter (fun (x,y) -> y = yr) slist)
 ;;
 
+(* tests *)
+let students = [("Joe",2010);("Bob",2010);("Tom",2013)];;
+assert (filter_by_year students 2010 = ["Joe";"Bob"]);;
+assert (filter_by_year students 2013 = ["Tom"]);;
 
 (*>* Problem 1.4 *>*)
 
 (* Please give us an honest estimate of how long this Part of the problem
  * set took you to complete.  We care about your responses and will use
  * them to help guide us in creating future assignments. *)
-let minutes_spent_on_part_1 : int = raise (Failure "Not implemented") ;;
+let minutes_spent_on_part_1 : int = 45;;
