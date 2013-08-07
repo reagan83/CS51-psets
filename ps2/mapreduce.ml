@@ -138,11 +138,14 @@ assert ((super_sum [[4;5];[4];[6;3;2];[2;4;3];[2;3]]) = 38);;
  *                 given range (inclusive), in the same order they appeared
  *                 in the input list.
  *       Example : filter_range [1;3;4;5;2] (1,3) = [1;3;2] *)
-sulet filter_range (nums:int list) (range:int * int) : int list =
-    raise (Failure "Not implemented")
+let filter_range (nums:int list) (range:int * int) : int list =
+    List.filter (fun z-> let x,y = range in z <= y
+    ) (List.filter (fun z-> let x,y = range in x <= z) nums)
 ;;
 
-
+(* tests *)
+assert((filter_range [1;3;4;5;2] (1,3) = [1;3;2]));;
+assert((filter_range [1;10;15;13;8] (13,15) = [15;13]));;
 
 (****************************************************)
 (**********       1.3 Fun with Types       **********)
@@ -171,7 +174,7 @@ let log10s (lst: float list) : float option list =
 ;;
 (* tests *)
 assert (log10s [1.0; 10.0; -10.0] = [Some 0.; Some 1.; None]);;
-assert (log10s [-2; -5] = [None;None]);;
+assert (log10s [-2.; -5.] = [None;None]);;
 
 (*>* Problem 1.3.c *>*)
 
