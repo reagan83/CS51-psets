@@ -9,19 +9,51 @@ let base = 1000;;
 
 (*>* Problem 1.1 *>*)
 let negate (b: bignum) : bignum =
-  raise ImplementMe
+  let {neg=n; coeffs=i} = b in {neg=not n; coeffs=i}
 ;;
 
 (*>* Problem 1.2 *>*)
 
 let fromInt (n: int) : bignum =
-  raise ImplementMe
+  let rec aux num:int list=
+    if num==0 then
+       []
+    else 
+       abs (num mod base) :: aux (num/base)
+  in
+  {neg=n<0; coeffs=List.rev (aux n)}
 ;;
 
-let toInt (b: bignum) : int option =
-  raise ImplementMe
+(* tests *)
+assert(fromInt 123456 = {neg=false; coeffs=[123;456]});;
+assert(fromInt 123456789 = {neg=false; coeffs=[123;456;789]});;
+assert(fromInt (-123456) = {neg=true; coeffs=[123;456]});;
+assert(fromInt (-123456789) = {neg=true;coeffs=[123;456;789]});;
+
+let toInt (b: bignum) =
+  let rec aux (b:int list) (p:int)=
+     match b with
+     |hd::[]-> Some (hd*p)
+     |hd::tl-> (match aux tl (p*base) with
+        |Some c-> let bint = (hd*p) in 
+                  if bint < hd then None 
+                  else Some (bint+c)
+        |None -> None)
+     |[]->Some 0
+  in
+  let {neg=n; coeffs=x} = b in
+  let c = List.rev x in
+     match aux c 1 with
+     |Some c-> if n then Some (-c) else Some c
+     |None -> None
 ;;
 
+(* tests *)
+assert(toInt (fromInt 123456) = Some(123456));;
+assert(toInt (fromInt 123456789) = Some (123456789));;
+assert(toInt (fromInt max_int) = Some (max_int));;
+assert(toInt (fromInt min_int) = Some (min_int));;
+assert(toInt {neg=false;coeffs=[123;456;789;123;456;789]} = None);;
 
 (** Some helpful string functions **)
 (* Splits a string into a list of its characters. *)
@@ -106,21 +138,70 @@ let toString (b: bignum): string =
 
 (*>* Problem 1.3 *>*)
 let equal (b1: bignum) (b2: bignum) : bool =
-  raise ImplementMe
+  b1 = b2
 ;;
 
-let less (b1: bignum) (b2: bignum) : bool =
-  raise ImplementMe
+let less (b1: bignum) (b2: bignum) (*: bool =*)=
+  let rec valCheck n1 n2=
+     match (n1,n2) with
+     |(h1::[],h2::[]) -> h1 < h2
+     |(h1::t1,h2::t2) -> if h1 < h2 then true
+                         else if h1 = h2 then valCheck t1 t2
+                         else false
+     |([],[])->true
+     |(_,_) -> false
+  in
+  let rec aux n1 n2 =
+     if List.length n1 > List.length n2 then false
+     else if List.length n1 < List.length n2 then true
+     else valCheck n1 n2
+  in
+  let {neg=n1;coeffs=c1}=b1 in
+  let {neg=n2;coeffs=c2}=b2 in
+  if n1 != n2 then (if n1 && not n2 then true else false)
+  else (if n1 then not (aux c1 c2) else aux c1 c2)
 ;;
 
 let greater (b1: bignum) (b2: bignum) : bool =
-  raise ImplementMe
+  let rec valCheck n1 n2=
+     match (n1,n2) with
+     |(h1::[],h2::[]) -> h1 > h2
+     |(h1::t1,h2::t2) -> if h1 > h2 then true
+                         else if h1 = h2 then valCheck t1 t2
+                         else false
+     |([],[])->true
+     |(_,_) -> false
+  in
+  let rec aux n1 n2 =
+     if List.length n1 > List.length n2 then true
+     else if List.length n1 < List.length n2 then false
+     else valCheck n1 n2
+  in
+  let {neg=n1;coeffs=c1}=b1 in
+  let {neg=n2;coeffs=c2}=b2 in
+  if n1 != n2 then (if n1 && not n2 then false else true)
+  else (if n1 then not (aux c1 c2) else aux c1 c2)
 ;;
+
+(* tests *)
+let p1 = fromInt 100;;
+let p2 = fromInt 150;;
+let n1 = fromInt ~-100;;
+let n2 = fromInt ~-150;;
+assert(less p1 p2 = greater p2 p1);;
+assert(less p2 p1 = greater p1 p2);;
+assert(less n1 p1 = greater p1 n1);;
+assert(less n2 p1 = greater p1 n2);;
+assert(less n1 n2 = greater n2 n1);;
+assert(less n2 n1 = greater n1 n2);;
+
+let o1 = fromInt 1500;;
+let o2 = fromInt 3000;;
+assert(less o1 o2 = true);;
 
 (** Some arithmetic functions **)
 
-(* Returns a bignum representing b1 + b2.
- * Assumes that b1 + b2 > 0. *)
+ (* Assumes that b1 + b2 > 0. *)
 let plus_pos (b1: bignum) (b2: bignum) : bignum =
   let pair_from_carry (carry: int) =
     if carry = 0 then (false, [])
@@ -159,19 +240,71 @@ let plus_pos (b1: bignum) (b2: bignum) : bignum =
 (* Returns a bignum representing b1 + b2.
  * Does not make the above assumption. *)
 let plus (b1: bignum) (b2: bignum) : bignum =
-  raise ImplementMe
+  let {neg=n1;coeffs=c1}=b1 in
+  let {neg=n2;coeffs=c2}=b2 in
+  if n1=n2 then 
+   let {neg=nr;coeffs=cr} = plus_pos {neg=false;coeffs=c1} {neg=false;coeffs=c2} in
+   {neg=n1;coeffs=cr}
+  else if n1 then
+   (if greater (negate b1) b2 then
+      negate (plus_pos (negate b1) (negate b2))
+    else 
+      plus_pos b1 b2
+   )
+  else
+   (if less b1 (negate b2) then
+      negate (plus_pos (negate b1) (negate b2))
+    else
+      plus_pos b1 b2
+   )
 ;;
+
+(* tests *)
+assert(plus (fromInt ~-100) (fromInt 50)   = fromInt ~-50);;
+assert(plus (fromInt 50) (fromInt ~-100)   = fromInt ~-50);;
+assert(plus (fromInt ~-150) (fromInt ~-150)= fromInt ~-300);;
+assert(plus (fromInt ~-1250) (fromInt 15) = fromInt ~-1235);;
+assert(plus (fromInt 1500) (fromInt 3000) = fromInt 4500);;
+assert(plus (fromInt 10020032) (fromInt 324640018) = fromInt 334660050);;
 
 (*>* Problem 1.5 *>*)
 (* Returns a bignum representing b1*b2 *)
 let times (b1: bignum) (b2: bignum) : bignum =
-  raise ImplementMe
+  let {neg=n1;coeffs=c1}=b1 in
+  let {neg=n2;coeffs=c2}=b2 in
+  let rec tmsSngle b i c p= 
+    if p > 0 then 0::tmsSngle b i c (p-1)
+    else
+    match b with
+    |hd::tl-> let prod=(hd * i)+c in (prod mod base)::(tmsSngle tl i (prod/base) 0)
+    |[] -> if c>0 then [c] else []
+  in
+  let rec aux mcnd mltpr p= 
+    match mltpr with
+    |hd::tl -> plus ({neg=false;coeffs=List.rev(tmsSngle mcnd hd 0 p)}) 
+                    (aux mcnd tl (p+1))
+    |[]->{neg=false;coeffs=[]}
+  in
+  if n1=n2 then aux (List.rev c1) (List.rev c2) 0
+  else negate(aux (List.rev c1) (List.rev c2) 0)
 ;;
+
+(* tests *)
+assert (times (fromInt 111222) (fromInt 3) = {neg=false;coeffs=[333;666]});;
+assert (times (fromInt 123456) (fromInt 5) = {neg=false;coeffs=[617;280]});;
+assert (times (fromInt 123456) (fromInt 250) = {neg=false;coeffs=[30;864;0]});; 
+assert (times (fromInt 100) (fromInt 10) = {neg=false;coeffs=[1;0]});;
+assert (times (fromInt 1000) (fromInt 3111) = {neg=false;coeffs=[3;111;0]});;
+assert (times (fromInt 123456) (fromInt 123456) = 
+       {neg=false;coeffs=[15;241;383;936]});;
+assert (times ({neg=false;coeffs=[123;456;789]})({neg=false;coeffs=[123;456;789]}) = 
+               {neg=false;coeffs=[15;241;578;750;190;521]});;
+assert (times (fromInt ~-111222) (fromInt 3) = {neg=true;coeffs=[333;666]});;
+assert (times (fromInt ~-111222) (fromInt ~-3) = {neg=false;coeffs=[333;666]});;
 
 let clean (b : bignum) : bignum = 
   {neg = b.neg; coeffs = stripzeroes b.coeffs}
 ;;
-
 
 (* Return the number of bytes required to represent an RSA modulus. *)
 let bytesInKey (n: bignum) =
@@ -323,11 +456,14 @@ let rec generateKeyPair (r: bignum) : bignum * bignum * bignum =
     if equal p q then generateKeyPair r else selectPair ()
 ;;
 
+
 (*>* Problem 2.1 *>*)
 (* To encrypt, pass in n e s. To decrypt, pass in n d s. *)
 let encryptDecryptBignum (n: bignum) (e: bignum) (s: bignum) : bignum =
-  raise ImplementMe
+  expmod s e n
 ;;
+
+(* tests further down *)
 
 (* Pack a list of chars as a list of bignums, with m chars to a bignum. *)
 let rec charsToBignums (lst: char list) (m: int) : bignum list =
@@ -365,23 +501,36 @@ let rec encDecBignumList (n: bignum) (e: bignum) (lst: bignum list) =
     | h::t -> (encryptDecryptBignum n e h)::(encDecBignumList n e t)
 ;;
 
-
 (*>* Problem 2.2 *>*)
 let encrypt (n: bignum) (e: bignum) (s: string) =
-  raise ImplementMe
+   encDecBignumList n e (charsToBignums (explode s) (bytesInKey n))
 ;;
 
 (* Decrypt an encrypted message (list of bignums) to produce the 
  * original string. *)
 let decrypt (n: bignum) (d: bignum) (m: bignum list) =
-  raise ImplementMe
+    implode (bignumsToChars (encDecBignumList n d m))
 ;;
 
-(**************************** Part 3: Challenge *********************************)
+(* tests *)
+let (es,ds,ns)=generateKeyPair (fromInt 64);;
+assert(encryptDecryptBignum ns ds (encryptDecryptBignum ns es (fromInt 567890)) =
+       fromInt 567890);;
+assert(encryptDecryptBignum ns ds (encryptDecryptBignum ns es (fromInt 12356789)) =
+       fromInt 12356789);;
+let message = "I am a Super Secret Message that is to be encoded with RSA 
+(made long to test out that it takes into account the modulus m).";;
 
+assert(decrypt ns ds (encrypt ns es message)=message);;
+
+(**************************** Part 3: Challenge *********************************)
+(*
 (* Returns a bignum representing b1*b2 *)
 let times_faster (b1: bignum) (b2: bignum) : bignum =
   raise ImplementMe
 ;;
-
-let minutes_spent = 0;;
+*)
+let minutes_spent = 330;;
+(* I made a slight mistake in the less and greater functions that made me 
+hunt which part of my code was wrong. This took a HUGE amount of time I'm
+not particularly proud of :/ *)
