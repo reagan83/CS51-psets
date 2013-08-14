@@ -13,7 +13,17 @@ sig
 end
 
 (* Write a module (struct) called Math that implements the MATH signature *)
-
+module MATH =
+struct
+  let pi = 3.14
+  let cos (x:float) = cos x
+  let sin (x:float) = sin x
+  let sum (x:float) (y:float) = x +. y
+  let max (lst:float list) = 
+     match lst with
+     |[]->None
+     |hd::tl-> Some (List.fold_left Pervasives.max hd tl)
+end
 
 
 (*>* Problem 1.1 *>*)
@@ -24,16 +34,23 @@ end
  *)
 
 
+module type LIST =
+sig
+  val length : 'a list->int
+  val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+  val rev : 'a list-> 'a list
+end
+
 (* The following should work after you have created your signature (you
  * can uncomment them *)
 
-(*
-module MyList = (List : LIST)
 
-assert(MyList.length [1;2;3] = 3)
-assert(MyList.fold_left (+) 0 [1;2;3] = 6)
-assert(MyList.rev [1;2;3] = [3;2;1])
-*)
+module MyList = (List : LIST);;
+
+assert(MyList.length [1;2;3] = 3);;
+assert(MyList.fold_left (+) 0 [1;2;3] = 6);;
+assert(MyList.rev [1;2;3] = [3;2;1]);;
+
 
 
 (* Even with your signature, the following line should never compile:
@@ -92,7 +109,17 @@ end
 (* Write a signature SINGER that exposes as much from *both* Adele
  * and Kesha as possible. *)
 
-(*
+module type SINGER =
+sig
+  type album
+  val perform :string -> string -> string -> unit
+  val chorus : string
+  val rehearse : unit -> unit
+  val doMath : float -> float -> float
+  val album_num : album -> int
+end
+
+
 module SKesha = (Kesha : SINGER)
 module SAdele = (Adele : SINGER)
- *)
+

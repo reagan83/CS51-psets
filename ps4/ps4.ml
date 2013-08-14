@@ -1,6 +1,6 @@
 (* PS4
  * CS51 Spring 2012
- * Author: YOUR NAME HERE
+ * Author: Secretmapper
  *)
 
 (* Things related to the TreeQueue module in this file are commented out
@@ -158,12 +158,32 @@ struct
    *
    * Hint: use C.compare. See delete for inspiration
    *)
-  let rec insert (x : elt) (t : tree) : tree = raise ImplementMe
+  let rec insert (x : elt) (t : tree) : tree =
+    match t with
+    | Leaf -> Branch (Leaf, [x], Leaf)
+    | Branch (l, lst, r) ->
+      match lst with
+      | [] -> raise (Failure "Should not have a tree with an empty node")
+      | hd::tl ->
+        match C.compare x hd with
+        | Less -> Branch (insert x l, lst, r)
+        | Greater -> Branch (l, lst, insert x r)
+        | Equal -> Branch (l, x :: lst, r)
 
 (*>* Problem 2.1 *>*)
 
   (* Returns true if the element x is in tree t, else false *)
-  let rec search (x : elt) (t : tree) : bool = raise ImplementMe
+  let rec search (x : elt) (t : tree) : bool = 
+    match t with
+    | Leaf -> false
+    | Branch (l, lst, r) ->
+      match lst with
+      | []-> raise (Failure "Should not have a tree with an empty node")
+      | hd::tl ->
+        match C.compare x hd with
+        | Less -> search x l
+        | Greater -> search x r
+        | Equal -> true
 
   (* A useful function for removing the node with the minimum value from
    * a binary tree, returning that node and the new tree.
@@ -222,13 +242,21 @@ struct
    *
    * The exception "EmptyTree", defined within this module, might come in
    * handy. *)
-  let rec getmin (t : tree) : elt = raise ImplementMe
+  let rec getmin (t : tree) : elt =
+    match t with
+    | Leaf -> raise EmptyTree
+    | Branch (Leaf, v, r) -> List.nth v ((List.length v)-1)
+    | Branch (l, v, r) -> getmin l
 
 (*>* Problem 2.3 *>*)
 
   (* Simply returns the maximum value of the tree t. Similarly should
    * return the last element in the matching list. *)
-  let rec getmax (t : tree) : elt = raise ImplementMe
+  let rec getmax (t : tree) : elt =
+    match t with
+    | Leaf -> raise EmptyTree
+    | Branch (l, v, Leaf) -> List.nth v ((List.length v)-1)
+    | Branch (l, v, r) -> getmax r
 
 
   let test_insert () =
@@ -304,6 +332,7 @@ struct
       let x4 = C.generate_lt x3 () in
       let after_ins = insert x4 (insert x3 (insert x2 (insert x empty))) in
       assert (delete x (delete x4 (delete x3 (delete x2 after_ins))) = empty)
+   
 
   let run_tests () =
     test_insert ();
@@ -389,13 +418,13 @@ struct
 
   type elt = C.t
 
-  type queue = FillMeIn
+  type queue = elt list
 
 (*>* Problem 3.1 *>*)
-  let empty = raise ImplementMe
+  let empty = []
 
 (*>* Problem 3.2 *>*)
-  let is_empty (t : queue) = raise ImplementMe
+  let is_empty (t : queue) = t=[]
 
 
 (*>* Problem 3.3 *>*)
@@ -405,12 +434,38 @@ struct
    * module simply becomes a regular queue (i.e., elements inserted earlier
    * should be removed before elements of the same priority inserted later)
    *)
-  let rec add (e : elt) (q : queue) = raise ImplementMe
+  let rec add (e : elt) (q : queue) =
+    match q with
+    | [] -> [e]
+    | hd::tl -> match C.compare e hd with
+                | Less -> e :: q
+                | Greater -> hd :: add e tl
+                | Equal -> hd :: add e tl
+		
 
 (*>* Problem 3.4 *>*)
-  let rec take (q : queue) = raise ImplementMe
+  let rec take (q : queue) = 
+    match q with
+    | [] -> raise QueueEmpty
+    | hd::tl -> (hd, tl)
+   
+  let run_tests () = 
+    let x = C.generate () in
+    let t = add x empty in
+    assert (t = [x]);
+    let t = add x t in
+    assert (t = x::[x]);
+    let y = C.generate_gt x () in
+    let t = add y t in
+    assert (t = x::x::[y]);
+    let z = C.generate_lt x () in
+    let t = add z t in
+    assert (t = z::x::x::[y]);
+    let (e, q) = take t in
+    assert (e = z);
+    assert (q = x::x::[y]);
+    ()
 
-  let run_tests () = raise ImplementMe
 end
 
 (*>* Problem 3.5 *>*)
@@ -419,7 +474,7 @@ end
  * Luckily, you should be able to use *a lot* of your code from above! *)
 
 (* Uncomment when you finish! *)
-(*
+
 module TreeQueue(C : COMPARABLE_AND_GENABLE) : PRIOQUEUE with type elt = C.t=
 struct
   exception QueueEmpty
@@ -429,9 +484,36 @@ struct
   module T = (BinSTree(C) : BINTREE with type elt = C.t)
 
   (* Implement the remainder of the module! *)
+  
+  type elt = C.t
+
+  type queue = T.tree
+
+  let empty = T.empty
+
+  let is_empty t = t = empty
+
+  let add (e:elt) (q:queue) = T.insert e q
+
+  let take (t : queue) = let res=(T.getmin t) in (res, T.delete res t)
+ 
+  let run_tests () = 
+    let x = empty in
+    assert (is_empty x);
+    let y = C.generate () in
+    let t = add y x in
+    assert (t=T.insert y x);
+    let l = C.generate_lt y () in
+    let t2 = add l t in
+    assert (t2=T.insert l t);
+  ()
 
 end
-*)
+
+module IntQueue = TreeQueue(IntCompare)
+
+let _ = IntQueue.run_tests ()
+
 (*****************************************************************************)
 (*                               Part 4                                      *)
 (*****************************************************************************)
@@ -532,12 +614,39 @@ struct
 
   (* Simply returns the top element of the tree t (i.e., just a single pattern
    * match in *)
-  let get_top (t : tree) : elt = raise ImplementMe
+  let get_top (t : tree) : elt =
+    match t with
+    | Leaf e | OneBranch(e,_) | TwoBranch(_,e,_,_) -> e
 
   (* Takes a tree, and if the top node is greater than its children, fixes
    * it. If fixing it results in a subtree where the node is greater than its
    * children, then you must (recursively) fix this tree too *)
-  let rec fix (t : tree) : tree = raise ImplementMe
+  let rec fix (t : tree) : tree =
+    let aux v t =
+    match t with
+    | Leaf e -> Leaf v
+    | OneBranch (e1, e2) -> OneBranch (v, e2)
+    | TwoBranch (s,e1,t1,t2) -> TwoBranch (s, v, t1, t2)
+    in
+    match t with
+    | Leaf e -> t
+    | OneBranch (e1,e2) ->
+        (match C.compare e1 e2 with
+        | Equal | Less -> t
+        | Greater -> OneBranch (e2,e1))
+    | TwoBranch(s,e1,t1,t2) -> 
+      let tn1 = get_top t1 in
+      let tn2 = get_top t2 in
+        (match C.compare tn1 tn2 with
+        | Equal | Less ->  
+           (match C.compare e1 tn1 with  
+           | Greater ->TwoBranch(s, tn1, fix (aux e1 t1), t2)
+           | Less | Equal -> t)
+        | Greater -> 
+           (match C.compare e1 tn2 with  
+           | Greater ->TwoBranch(s, tn2, t1, fix (aux e1 t2))
+           | Less | Equal -> t))
+	
 
   let extract_tree (q : queue) : tree =
     match q with
@@ -557,7 +666,20 @@ struct
    * down into a new node at the bottom of the tree. *This* is the node
    * that we want you to return.
    *)
-  let rec get_last (t : tree) : elt * queue = raise ImplementMe
+  let rec get_last (t : tree) : elt * queue = 
+    match t with
+    | Leaf e -> (e, Empty)
+    | OneBranch(e1,e2) -> (e2, Tree (Leaf e1))
+    | TwoBranch(Odd,e1,t1,t2) -> 
+      let (e,q) = get_last t1 in 
+        (match q with
+        | Empty -> (e, Tree(OneBranch(e1, get_top t2)))
+        | Tree t-> (e, Tree(TwoBranch(Even, e1, t, t2))))
+    | TwoBranch(Even,e1,t1,t2) ->
+      let (e,q) = get_last t2 in 
+        (match q with
+        | Empty -> (e, Tree(OneBranch(e1, get_top t1)))
+        | Tree t-> (e, Tree(TwoBranch(Odd, e1, t1, t))))
 
   (* Implements the algorithm described in the writeup. You must finish this
    * implementation, as well as the implementations of get_last and fix, which
@@ -583,9 +705,25 @@ struct
        | Empty -> (e, Tree (fix (OneBranch (last, get_top t1))))
        | Tree t2' -> (e, Tree (fix (TwoBranch (Odd, last, t1, t2')))))
     (* Implement the odd case! *)
-    | TwoBranch (Odd, e, t1, t2) -> raise ImplementMe
+    | TwoBranch (Odd, e, t1, t2) -> 
+      let (last, q1') = get_last t1 in
+      (match q1' with
+       | Empty -> (e, Tree (fix (OneBranch (last, get_top t2))))
+       | Tree t1' -> (e, Tree (fix (TwoBranch (Odd, last, t1', t2)))))
 
-  let run_tests () = raise ImplementMe
+  let run_tests () =
+    let x = C.generate () in
+    let t = add x empty in
+    assert(t = Tree(Leaf x));
+    let y = C.generate_lt x () in 
+    let t = add y t in 
+    assert(t = Tree(OneBranch(y,x)));
+    let z = C.generate_gt y () in
+    let t = add z t in 
+    assert(t = Tree(TwoBranch(Even, x, Leaf y, Leaf z)));
+    let t = take t in
+    assert(t = (x, Tree(OneBranch(y,z))));
+    ();
 end
 
 (* Now to actually use our priority queue implementations for something useful!
@@ -620,6 +758,8 @@ let heap_module = (module IntHeapQueue : PRIOQUEUE with type elt = IntCompare.t)
 (*
 let tree_module = (module IntTreeQueue : PRIOQUEUE with type elt = IntCompare.t)
 *)
+(* run tests *)
+let _ = IntHeapQueue.run_tests ();
 
 (* Implements sort using generic priority queues. *)
 let sort (m : (module PRIOQUEUE with type elt=IntCompare.t)) (lst : int list) =
@@ -676,4 +816,4 @@ let selectionsort = sort list_module
  * See the Sys module for functions related to keeping track of time *)
 
 (*>* Problem N.2 *>*)
-let minutes_spent : int = raise ImplementMe;;
+let minutes_spent : int = 195;;
