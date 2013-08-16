@@ -1,0 +1,105 @@
+CS51	&	CSCI	E-250 Mid-Term	Examination
+Spring	2013
+This	is	a	closed	book,	no-computer,	no	calculator,	no	smart-phone	exam.		Write	your	
+answers	in	the	provided	books (or	if	you’re	taking	the	exam	with	a	proctor,	use	whatever	
+paper	you	brought	with	you.) Make	sure	to	write	your	name on	each	bookthat	you	use	
+to	record	your	answers.		Good	luck!
+1. [40 points	total,	5 points	each] For	each	of	the	following	OCaml	expressions,	explain
+what	value	we	get	when	we	evaluate	the	expression,	or	why	the	expression	makes	no	
+sense. Be	careful	– some	of	these	expressions	may not	type-check.
+a. let f = fun x y -> x + y in
+let g = f 10 in
+g 32
+b. let f = fun x y -> x + y in
+f 42
+c. let rec reduce f u xs = 
+match xs with
+| [] -> u
+| h::t -> f h (reduce f u t) in
+let a = [1 ; 2 ; 3 ; 4] in
+reduce (fun a b -> a + 1) 0 a 
+d. let f g = fun f -> fun x -> f (g x) in
+let f = f (fun f -> 1+f) in
+let f = f (fun f -> 42) in
+f 3
+e. let rec f x y = 
+match y with
+| [] -> x
+| (a,b)::t -> (b,a) :: (f y t)
+in
+f [1;2;3] [4;5;6]f. let rec reduce f u xs = 
+match xs with 
+| [] -> u
+| h::t -> f h (reduce f u t) in
+let g = reduce (fun a b -> a::b) in
+g [1;2;3] [4;5;6] 
+g. let x = 0 in
+let f = (fun _ -> x) in
+let x = 42 in
+f 42
+h. let fst p = let (x,_) = p in x in
+let snd p = let (_,y) = p in y in
+let vs = [(1,2) ; (3,4); (5,6)] in
+(List.map snd vs, List.map fst vs)
+2. [24 points	total,	6	points	each]Recall	Ke$ha's	favorite	function:
+let rec reduce f u xs = 
+match xs with 
+| [] -> u
+| h::t -> f h (reduce f u t)
+For	each	of	the	following	function	definitions,	rewrite	the	definition	using	reduce	and	
+without	any	other	recursive	function. Keep	your	definitions	as	simple,	clean,	and	
+elegant	as	possible.
+a. let rec sum xs = 
+match xs with
+| [] -> 0
+| h::t -> h + (sum t)
+b. let rec map f xs = 
+match xs with
+| [] -> []
+| h::t -> (f h)::(map f t)
+c. let rec foo p xs = 
+match xs with
+| [] -> []
+| h::t -> if p h then foo p t else h::(foo p t)d. let rec split xs = 
+match xs with
+| [] -> ([],[])
+| h::t -> let (a,b) = split t in (b, h::a)
+3. [21 points	total] Consider	the	following	definitions:
+type set = Empty | Single of int | Union of set * set
+let union (s1:set) (s2:set) : set = Union (s1, s2)
+let rec member (x:int) (s:set) : bool = 
+match s with
+| Empty -> false
+| Single y -> x = y
+| Union (s1, s2) -> member x s1 || member x s2
+let rec intersect (s1:set) (s2:set) : set = 
+match s1 with 
+| Empty -> Empty
+| Single x -> if member x s2 then s1 else Empty
+| Union (t1, t2) -> union (intersect t1 s1) (intersect t2 s2) 
+a. [5 points]	What	advantage	does	this	representation	of	sets	have	over	simply	using	
+lists	of	integers?
+b. [4 points] Write	recurrence	equations	that	describe	the	running	time	of	memberas	
+a	function	of	the	number	of	nodes (i.e.,	Empty,	Single,	or	Unionconstructors)	in	
+the	representation	of	set	s.
+c. [4 points]		Simplify	the	recurrence	equations	to	come	up	with	a	big-O	worst	case	
+running	time	for	memberas	a	function	of	the	number	of	nodes in	the	set	s.
+d. [4 points]		Write	recurrence	equations	that	describe	the	running	time	of	
+intersectas	a	function	of	the	number	of	nodes in	the	sets	s1and	s2.
+e. [4 points] Assuming	that	we	intersecttwo	sets	with	roughly	the	same	number	of	
+nodes n,	what	is	the	big-O	worst	case	running	time	as	a	function	of	n?4. [15 points	total,	3	points	each] Respond	with	true or	false to	each	question.
+a. If	function	fruns	in	time	O(n)	and	function	gruns	in	time	O(n
+2),	then	for	a	big	
+enough	value	of	n,	we	can	expect	that	gruns	faster	than	f.
+b. The	following	definitions	are	equivalent:
+let f x y z = x*y-z ;;
+let f x = fun y -> fun z -> x*y-z ;;
+c. The	following	function	is	tail-recursive:
+let rec map f xs = 
+match xs with
+| [] -> []
+| h::t -> (f h)::(map f t)
+d. The	most	general	type	of	mapis:
+(int -> int) -> int list -> int list
+e. Using	modules	to	build	and	enforce	abstract	data	types	means	that	we	don't	
+need	to	test	whether	clients	are	respecting	our	representation	invariants.			
