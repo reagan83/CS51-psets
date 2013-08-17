@@ -1,0 +1,392 @@
+<!DOCTYPE>
+<head>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script src="/mws/csharvard/ckeditor/ckeditor.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script>
+    $( document ).ready( function() {
+      CKEDITOR.inline("main", {
+        extraPlugins: 'sourcedialog,codemirror'
+      });
+      $('#main').attr('contenteditable','true');
+    });
+</script>
+  <div id='main'>
+<h1>
+  CS51 &amp; CSCI E-250 Mid-Term Examination
+</h1>
+<p>
+  Spring 2013
+  <br />
+  This is a closed book, no-computer, no calculator, no smart-phone exam. Write your
+  <br />
+  answers in the provided books (or if you&rsquo;re taking the exam with a proctor, use whatever
+  <br />
+  paper you brought with you.) Make sure to write your name on each bookthat you use
+  <br />
+  to record your answers. Good luck!
+</p>
+<p>
+  &nbsp;
+</p>
+<ol>
+  <li>[40 points total, 5 points each] For each of the following OCaml expressions, explain
+    <br />
+    what value we get when we evaluate the expression, or why the expression makes no
+    <br />
+    sense. Be careful &ndash; some of these expressions may not type-check.
+    <ol>
+      <li><code>
+        let f = fun x y -&gt; x + y in
+        <br />
+        let g = f 10 in
+        <br />
+        g 32 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> 42
+        </div>
+      </li>
+      <li><code>
+        let f = fun x y -&gt; x + y in
+        <br />
+        f 42 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> int-&gt;int= ; fun y = (42 + y)
+        </div>
+      </li>
+      <li><code>
+        let rec reduce f u xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; u
+        <br />
+        | h::t -&gt; f h (reduce f u t) in
+        <br />
+        let a = [1 ; 2 ; 3 ; 4] in
+        <br />
+        reduce (fun a b -&gt; a + 1) 0 a 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> 2
+        </div>
+      </li>
+      <li><code>
+        let f g = fun f -&gt; fun x -&gt; f (g x) in
+        <br />
+        let f = f (fun f -&gt; 1+f) in
+        <br />
+        let f = f (fun f -&gt; 42) in
+        <br />
+        f 3 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> 42
+        </div>
+      </li>
+      <li><code>
+        let rec f x y =
+        <br />
+        match y with
+        <br />
+        | [] -&gt; x
+        <br />
+        | (a,b)::t -&gt; (b,a) :: (f y t)
+        <br />
+        in
+        <br />
+        f [1;2;3] [4;5;6] 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> Wrong Type, Our function pattern matches tuple lists&nbsp;while we pass in an int list.
+        </div>
+      </li>
+      <li><code>
+        let rec reduce f u xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; u
+        <br />
+        | h::t -&gt; f h (reduce f u t) in
+        <br />
+        let g = reduce (fun a b -&gt; a::b) in
+        <br />
+        g [1;2;3] [4;5;6] 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> [4;5;6;1;2;3];
+        </div>
+      </li>
+      <li><code>
+        let x = 0 in
+        <br />
+        let f = (fun _ -&gt; x) in
+        <br />
+        let x = 42 in
+        <br />
+        f 42 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;0
+        </div>
+      </li>
+      <li><code>
+        let fst p = let (x,_) = p in x in
+        <br />
+        let snd p = let (_,y) = p in y in
+        <br />
+        let vs = [(1,2) ; (3,4); (5,6)] in
+        <br />
+        (List.map snd vs, List.map fst vs) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> ([2;4;6], [1;3;5]);
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>[24 points total, 6 points each] Recall Ke$ha&#39;s favorite function:
+    <br />
+    <code>
+      let rec reduce f u xs =
+      <br />
+      match xs with
+      <br />
+      | [] -&gt; u
+      <br />
+      | h::t -&gt; f h (reduce f u t) 
+    </code>
+    <br />
+    For each of the following function definitions, rewrite the definition using reduce and
+    <br />
+    without any other recursive function. Keep your definitions as simple, clean, and
+    <br />
+    elegant as possible.
+    <ol>
+      <li><code>
+        let rec sum xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; 0
+        <br />
+        | h::t -&gt; h + (sum t) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;let sum = reduce (+) 0
+        </div>
+      </li>
+      <li><code>
+        let rec map f xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; []
+        <br />
+        | h::t -&gt; (f h)::(map f t) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;let map f&nbsp;=&nbsp;reduce (fun x y = f x :: y) &nbsp;[]
+        </div>
+      </li>
+      <li><code>
+        let rec foo p xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; []
+        <br />
+        | h::t -&gt; if p h then foo p t else h::(foo p t) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> let foo p = reduce (fun x y = if p x&nbsp;then y else x::y) []
+        </div>
+      </li>
+      <li><code>
+        let rec split xs =
+        <br />
+        match xs with
+        <br />
+        | [] -&gt; ([],[])
+        <br />
+        | h::t -&gt; let (a,b) = split t in (b, h::a) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> let split = reduce (fun x (a,b)&nbsp;= (b, x::a)) ([],[])
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>[21 points total] Consider the following definitions:
+    <br />
+    <code>
+      type set = Empty | Single of int | Union of set * set
+      <br />
+      let union (s1:set) (s2:set) : set = Union (s1, s2)
+      <br />
+      let rec member (x:int) (s:set) : bool =
+      <br />
+      match s with
+      <br />
+      | Empty -&gt; false
+      <br />
+      | Single y -&gt; x = y
+      <br />
+      | Union (s1, s2) -&gt; member x s1 || member x s2
+      <br />
+      let rec intersect (s1:set) (s2:set) : set =
+      <br />
+      match s1 with
+      <br />
+      | Empty -&gt; Empty
+      <br />
+      | Single x -&gt; if member x s2 then s1 else Empty
+      <br />
+      | Union (t1, t2) -&gt; union (intersect t1 s1) (intersect t2 s2) 
+    </code>
+    <ol>
+      <li>a. [5 points] What advantage does this representation of sets have over simply using
+        <br />
+        lists of integers?
+        <div class="alert">
+          <strong>Answer:</strong> The advantage of using this representation of sets is that our union functions run in constant time, as opposed to the linear time we would have if we were working with lists.
+        </div>
+      </li>
+      <li>b. [4 points] Write recurrence equations that describe the running time of member as
+        <br />
+        a function of the number of nodes (i.e., Empty, Single, or Union constructors) in
+        <br />
+        the representation of set s.
+        <div class="alert alert-block">
+          <div>
+            <strong>Answer:</strong>
+          </div>
+          <div>
+            &nbsp;as&nbsp;a function of the number of <strong>nodes</strong>
+          </div>
+          <div>
+            T<sub>member</sub>(1) = C;
+          </div>
+          <div>
+            T<sub>member</sub>(n) = C + T<sub>member</sub>(n&#39;) + T<sub>member</sub>(n-n&#39;) <em>where n is odd</em>
+          </div>
+        </div>
+      </li>
+      <li>c. [4 points] Simplify the recurrence equations to come up with a big-O worst case
+        <br />
+        running time for member as a function of the number of nodes in the set s.
+        <div class="alert alert-block">
+          <strong>Answer:</strong> T<sub>member</sub>(n)=n
+        </div>
+      </li>
+      <li>d. [4 points] Write recurrence equations that describe the running time of
+        <br />
+        intersect as a function of the number of nodes in the sets s1 and s2.
+        <div class="alert alert-block">
+          <div>
+            <strong>Answer:</strong>&nbsp;
+          </div>
+          <div>
+            T<sub>interesect</sub>(1, s2)=T<sub>member</sub>(s2);&nbsp;
+          </div>
+          <div>
+            T<sub>interesect</sub>(s1, s2) =&nbsp;<span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">T</span><span style="color:rgb(192, 152, 83); font-size:11px">interesect</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(s1&#39;, s2) + T<sub>instersect</sub>(s1-s1&#39;, s2) <em>where n is greater than 0</em></span>
+          </div>
+        </div>
+      </li>
+      <li>e. [4 points] Assuming that we intersect two sets with roughly the same number of
+        <br />
+        nodes n, what is the big-O worst case running time as a function of n?
+        <div class="alert alert-block">
+          <div>
+            <strong>Answer:</strong>
+          </div>
+          <div>
+            <em>Roughly the same number of nodes n. So it&#39;s basically the answer above but&nbsp;s1 &asymp; s2 ?</em>
+          </div>
+          <div>
+            <em><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">interesect</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(1, s2)=T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">member</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(s2);&nbsp;</span></em>
+          </div>
+          <div>
+            T<sub>intersect</sub>(n, n&#39;) = T<sub>intersect</sub>(m,n&#39;) + T<sub>intersect</sub>(n-m, n&#39;)&nbsp;<em>where n&#39; is &asymp; n and n is greater than 0;</em>
+          </div>
+          <div>
+            T<sub>intersect</sub>(n, n&#39;) = &nbsp;T<sub>member</sub>(n&#39;)+<span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">member</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(n&#39;)+T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">member</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(n&#39;)...</span>&nbsp;<em>+&nbsp;</em>Tintersect(n-m, n&#39;)
+          </div>
+          <div>
+            so we are basically checking for collisions on a square which is&nbsp;
+          </div>
+          <div>
+            T<sub>intersect</sub>(n, n) <em>= </em>T<sub>intersect</sub>(n<sup>2</sup>)
+          </div>
+          <div>
+            <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">intersect</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(n, n&#39;)&nbsp;</span>&asymp;&nbsp;<span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">T</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83); font-size:11px">intersect</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">(n<sup><span style="font-size:11px">2</span></sup></span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">) ???</span>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>[15 points total, 3 points each] Respond with true or false to each question.
+    <p>
+      &nbsp;
+    </p>
+    <ol>
+      <li>a. If function f runs in time O(n) and function g runs in time O(n<sup>2</sup>), then for a big
+        <br />
+        enough value of n, we can expect that g runs faster than f.
+        <div class="alert">
+          <strong>Answer:</strong> false
+        </div>
+      </li>
+      <li>b. The following definitions are equivalent:
+        <br />
+        <code>
+          let f x y z = x*y-z ;;
+          <br />
+          let f x = fun y -&gt; fun z -&gt; x*y-z ;; 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> true
+        </div>
+      </li>
+      <li>c. The following function is tail-recursive:
+        <br />
+        <code>
+          let rec map f xs =
+          <br />
+          match xs with
+          <br />
+          | [] -&gt; []
+          <br />
+          | h::t -&gt; (f h)::(map f t) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong> false
+        </div>
+      </li>
+      <li>d. The most general type of map is:
+        <br />
+        (int -&gt; int) -&gt; int list -&gt; int list
+        <div class="alert">
+          <strong>Answer:</strong> false
+        </div>
+      </li>
+      <li>e. Using modules to build and enforce abstract data types means that we don&#39;t
+        <br />
+        need to test whether clients are respecting our representation invariants.
+        <div class="alert">
+          <strong>Answer:</strong> true
+        </div>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+</div>
+</body>
