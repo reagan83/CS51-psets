@@ -1,6 +1,6 @@
 (* NAMES:
  *
- * Partner 1's name: ______
+ * Partner 1's name: Secretmapper
  * Partner 1's code.seas account: _______
  *
  * (Leave blank if you are working alone)

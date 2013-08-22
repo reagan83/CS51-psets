@@ -67,7 +67,25 @@ let print s =
  * reached the maximum number of links (n) or the frontier is empty. *)
 let rec crawl (n:int) (frontier: LinkSet.set)
     (visited : LinkSet.set) (d:WordDict.dict) : WordDict.dict = 
-  WordDict.empty
+  if n < 0 || LinkSet.is_empty frontier then d else
+  match  (LinkSet.choose frontier)  with
+  |Some (setLink,_) -> 
+    if (LinkSet.member visited setLink) then
+      crawl (n) (LinkSet.remove setLink frontier) visited d
+    else
+      (match (get_page setLink) with
+      |Some page -> (crawl (n-1) 
+      (List.fold_left (fun x y->LinkSet.insert y x) 
+        (LinkSet.remove setLink frontier) page.links)
+        (LinkSet.insert setLink visited)
+        (List.fold_left (fun dict word -> 
+         match WordDict.lookup dict word with
+       |Some x -> WordDict.insert dict word (LinkSet.insert page.url x)
+       |None   -> WordDict.insert dict word (LinkSet.insert page.url LinkSet.empty) 
+      ) d page.words))
+      |None -> crawl (n-1) (LinkSet.remove setLink frontier) 
+      (LinkSet.insert setLink frontier) d)
+ |None -> d
 ;;
 
 let crawler () = 
