@@ -1,0 +1,6 @@
+1. Yes. We specify how long we want a note to play, so we can have notes in parallel
+2. Yes. We specify which note to stop, that way we can have notes running in parallel
+3. Because stops tell what pitch needs to end, while rest is just that, a rest.
+4. The units of measure in the object representation, how long till the next event in the event representation.
+5. 
+6. 

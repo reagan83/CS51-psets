@@ -11,7 +11,8 @@ and 'a tr = Stem of 'a * 'a tree * 'a tree ;;
    at the root of the tree *)
 
 let headt (t: 'a tree) : 'a =
-  raise (Failure "unimplemented")
+  match t() with
+  |Stem(a,_,_) -> a
 ;;
 
 (*>* Problem 2.1.b *>*)
@@ -19,11 +20,13 @@ let headt (t: 'a tree) : 'a =
    left and right subtrees respectively *)
 
 let ltail (t: 'a tree) : 'a tree =
-  raise (Failure "unimplemented")
+  match t() with
+  |Stem(_,l,_) -> l
 ;;
 
 let rtail (t: 'a tree) : 'a tree =
-  raise (Failure "unimplemented")
+  match t() with
+  |Stem(_,_,r) -> r
 ;;
 
 (*>* Problem 2.1.c *>*)
@@ -31,7 +34,7 @@ let rtail (t: 'a tree) : 'a tree =
    over the given treestream *)
 
 let rec mapt (f: 'a -> 'b) (t: 'a tree) : 'b tree =
-  raise (Failure "unimplemented")
+  fun () -> Stem(f (headt t), mapt f (ltail t), mapt f (rtail t))
 ;;
 
 (*>* Problem 2.1.d *>*)
@@ -41,14 +44,16 @@ let rec mapt (f: 'a -> 'b) (t: 'a tree) : 'b tree =
    the corresponding value in "zipt f t1 t2" should be "f x1 x2" *)
 
 let rec zipt (f: 'a -> 'b -> 'c) (t1: 'a tree) (t2: 'b tree) : 'c tree =
-  raise (Failure "unimplemented")
+  fun () -> Stem(f (headt t1) (headt t2), 
+                     zipt f (ltail t1) (ltail t2),
+                     zipt f (rtail t1) (rtail t2))
 ;;
 
 (* Define a treestream of all ones *)
 
 (*>* Problem 2.1.e *>*)
 let rec onest () =
-  raise (Failure "unimplemented")
+  Stem(1,onest,onest)
 ;;
 
 (* Define a treestream in which each positive natural number appears
@@ -66,7 +71,7 @@ etc. This should look something like the following
 
 (*>* Problem 2.1.f *>*)
 let rec treenats () =
-  raise (Failure "unimplemented")
+  Stem(1,mapt (( *) 2) treenats, mapt (fun x-> (x*2) + 1) treenats)
 ;;
 
 (***************** Using the Lazy module ******************)
@@ -89,20 +94,22 @@ let rec ones = Cons(1, lazy(ones));;
 (* Implement the head function *)
 
 let head (s:'a stream) : 'a =
-  raise (Failure "unimplemented")
+  match s with
+  |Cons(h,t) -> h
 ;;
 
 (*>* Problem 2.2.b *>*)
 (* Implement map *)
 
 let rec map (f:'a -> 'b) (s:'a stream) : 'b stream =
-  raise (Failure "unimplemented")
+  match s with
+  |Cons(h,t) -> Cons(f h, lazy (map f (Lazy.force t)))
 ;;
 
 (*>* Problem 2.2.c *>*)
 (* Define nats *)
 
-let rec nats = raise (Failure "unimplemented") ;;
+let rec nats = Cons(0, lazy(map ((+) 1) nats));;
 
 (*>* Problem 2.2.d *>*)
 (* Write a function nth, which returns the nth element of a
@@ -110,7 +117,10 @@ let rec nats = raise (Failure "unimplemented") ;;
    words, "nth 0 s" should be equivalent to "head s". *)
 
 let rec nth (n:int) (s:'a stream) : 'a =
-  raise (Failure "unimplemented")
+  match s with
+  |Cons(h,t) -> 
+    if n <= 0 then h
+    else nth (n-1) (Lazy.force t)
 ;;
 
 (*>* Problem 2.2.e *>*)
@@ -120,23 +130,40 @@ let rec nth (n:int) (s:'a stream) : 'a =
    function. NOTE: This is not a simple merge function. You must
    REMOVE DUPLICATES *)
 
-let merge (s1:int stream) (s2:int stream) : int stream =
-  raise (Failure "unimplemented")
+let rec merge (s1:int stream) (s2:int stream) : int stream =
+  match s1,s2 with
+  |Cons(h1,t1),Cons(h2,t2) ->
+    if h1 > h2 then 
+      Cons(h2, lazy (merge s1 (Lazy.force t2)))
+    else if h1=h2 then 
+      Cons(h1, lazy (merge (Lazy.force t1) (Lazy.force t2)))
+    else
+      Cons(h1, lazy (merge (Lazy.force t1) s2))   
 ;;
+
+(* tests *)
+let rec n3ts = Cons(1, lazy(map((+) 2) n3ts));;
+let rec n2ts = Cons(0, lazy(map((+) 2) n2ts));;
+let rec n0ts = merge n3ts n2ts;;
+assert(nth 0 n0ts=0);;
+assert(nth 1 n0ts=1);;
+assert(nth 2 n0ts=2);;
 
 (*>* Problem 2.2.f *>*)
 (* What problems can we run into with this conception of "merge"? What
    if we were to run "merge ones ones"? Answer within the comment. *)
 
 (* 
-   Answer:
+   Answer: Tricky Question. The only problem I can see with this is that if we go
+    about merge ones ones, we'll just be iterating through an infinite list 
+    without really modifying anything.
 *)
 
 (*>* Problem 2.2.g *>*)
 (* Write a function "scale", which takes an integer "n" and an int
    stream "s", and multiplies each element of "s" by "n". *)
 
-let scale n = raise (Failure "unimplemented") ;;
+let scale s n = map(( *) n) s;;
 
 (*>* Problem 2.2.h *>*)
 (* Suppose we wish to create a stream of the positive integers "n" in
@@ -160,10 +187,10 @@ let scale n = raise (Failure "unimplemented") ;;
    give a simple definition for "selectivestream". This can be done quite
    elegantly. *)
 
-let rec selectivestream = raise (Failure "unimplemented") ;;
+let rec selectivestream = merge (scale nats 3) (scale nats 5);;
 
 (*>* Problem 2.3 *>*)
 (* Please give us an honest estimate of how long this part took 
  * you to complete.  We care about your responses and will use
  * them to help guide us in creating future assignments. *)
-let minutes_spent : int = -1
+let minutes_spent : int = 35

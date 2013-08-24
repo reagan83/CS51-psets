@@ -121,7 +121,14 @@ let shift_start (by : float) (str : event stream) =
  * since you will call both the inner and outer functions at some point. *)
 let rec list_to_stream (lst : obj list) : event stream = 
   let rec list_to_stream_rec nlst =
-    raise (Failure "Unimplemented")
+    match nlst with
+    |[] -> list_to_stream lst
+    |h::tl -> (match h with
+     |Note(p,t,i) -> fun () ->
+   Cons(Tone(0.,p,i),fun()->Cons(Stop(t,p),list_to_stream_rec tl))
+     |Rest(f) -> fun()->
+   Cons(Tone(0.,(A,0),0),fun()->Cons(Stop(f,(A,0)),list_to_stream_rec tl))
+    )
   in list_to_stream_rec lst
 
 (* You might find this small helper function, well... helpful. *)
@@ -134,8 +141,18 @@ let time_of_event (e : event) : float =
 (* Write a function pair that merges two event streams. Events that happen
  * earlier in time should appear earlier in the merged stream. *)
 let rec pair (a : event stream) (b : event stream) : event stream =
-  raise (Failure "Unimplemented")
-
+  let heada, headb = head a, head b in
+  let theada, theadb = time_of_event heada, time_of_event headb in
+  let aux (dec:float) = map (fun x->
+    match x with
+    |Tone(f,p,i) -> Tone(f-.dec,p,i)
+    |Stop(f,p) -> Stop(f-.dec,p))
+  in
+  if theada > theadb || theada = theadb then 
+   fun()->Cons(headb, pair (fun()->aux theadb a()) (aux theadb (tail b)))
+  else
+   fun()->Cons(heada, pair (aux theada (tail a)) (fun()->aux theada b()))
+ 
 (*>* Problem 3.3 *>*)
 (* Write a function transpose that takes an event stream and moves each pitch
  * up by half_steps pitches. Note that half_steps can be negative, but
@@ -150,7 +167,11 @@ let transpose_pitch (p, oct) half_steps =
     else (int_to_p (newp mod 12), oct + (newp / 12))
 
 let transpose (str : event stream) (half_steps : int) : event stream =
-    raise (Failure "Unimplemented")
+  map (fun x ->
+    match x with
+    |Tone(f,p,i) -> Tone(f, transpose_pitch p half_steps, i) 
+    |Stop(f,p) -> Stop(f, transpose_pitch p half_steps)
+  ) str
 
 (* Some functions for convenience. *)
 let quarter pt = Note(pt,0.25,60);;
@@ -161,7 +182,7 @@ let eighth pt = Note(pt,0.125,60);;
  * the functions above. *)
 (* Start off with some scales. We've done these for you.*)
 
-(*
+
 let scale1 = list_to_stream (List.map quarter [(C,3);(D,3);(E,3);(F,3);(G,3);
                                             (A,3);(B,3);(C,4)]);;
 
@@ -169,8 +190,10 @@ let scale2 = transpose scale1 7;;
 
 let scales = pair scale1 scale2;;
 
+let scales = scale1;;
+
 output_midi "scale.mid" 32 scales;;
-*)
+
 
 (*>* Problem 3.4 *>*)
 (* Then with just three lists ... *)

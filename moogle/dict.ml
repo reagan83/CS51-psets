@@ -865,6 +865,7 @@ struct
   let test_fold () =
     let pairs1 = generate_pair_list 8 in
     let d1 = insert_list empty pairs1 in
+    assert(balanced d1);
     (*print_string (string_of_tree d1);
     print_newline();
     let lst = fold (fun k v a -> (k,v)::a) [(D.gen_pair ())] d1 in
