@@ -143,15 +143,19 @@ let time_of_event (e : event) : float =
 let rec pair (a : event stream) (b : event stream) : event stream =
   let heada, headb = head a, head b in
   let theada, theadb = time_of_event heada, time_of_event headb in
-  let aux (dec:float) = map (fun x->
+  let aux (dec:float) = fun x->
     match x with
     |Tone(f,p,i) -> Tone(f-.dec,p,i)
-    |Stop(f,p) -> Stop(f-.dec,p))
+    |Stop(f,p) -> Stop(f-.dec,p)
   in
-  if theada > theadb || theada = theadb then 
-   fun()->Cons(headb, pair (fun()->aux theadb a()) (aux theadb (tail b)))
+  if theada > theadb then
+   fun()->Cons(headb, pair (fun()->Cons((aux theadb) heada,tail a)) (tail b))
+  else if theada = theadb then 
+   fun()->Cons(heada, fun ()->
+            Cons(aux theada headb,
+              pair (tail a) (tail b)))
   else
-   fun()->Cons(heada, pair (aux theada (tail a)) (fun()->aux theada b()))
+   fun()->Cons(heada, pair (tail a) (fun()->Cons((aux theada) headb,tail b)))
  
 (*>* Problem 3.3 *>*)
 (* Write a function transpose that takes an event stream and moves each pitch
@@ -190,15 +194,13 @@ let scale2 = transpose scale1 7;;
 
 let scales = pair scale1 scale2;;
 
-let scales = scale1;;
-
-output_midi "scale.mid" 32 scales;;
+output_midi "scalepair.mid" 32 scales;;
 
 
 (*>* Problem 3.4 *>*)
 (* Then with just three lists ... *)
 
-(*
+
 let bass = list_to_stream (List.map quarter [(D,3);(A,2);(B,2);(Gb,2);(G,2);
                                              (D,2);(G,2);(A,2)]);;
 
@@ -208,7 +210,7 @@ let fast = [(D,3);(Gb,3);(A,3);(G,3);(Gb,3);(D,3);(Gb,3);(E,3);(D,3);(B,2);
             (D,3);(A,3);(G,3);(B,3);(A,3);(G,3)];;
 
 let melody = list_to_stream ((List.map quarter slow)@(List.map eighth fast));;
-*)
+
 
 (* ...and the functions we defined, produce (a small part of) agreat piece of 
  * music. The piece should be four streams merged: one should be the bass 
@@ -219,9 +221,11 @@ let melody = list_to_stream ((List.map quarter slow)@(List.map eighth fast));;
  * bass and melody. Uncomment the definitions above and the lines below when
  * you're done. Run the program to hear the beautiful music. *)
 
-(* let canon = raise (Failure "Unimplemented");;
+let canon = pair bass 
+                 (pair (shift_start 2. melody) 
+                      (pair (shift_start 4. melody) (shift_start 6. melody)));;
 
-output_midi "canon.mid" 176 canon;; *)
+output_midi "canon.mid" 176 canon;;
 
 (* Some other musical parts for you to play with. *)
 
@@ -245,8 +249,67 @@ let part4 = list_to_stream [Rest(0.25); Note((G,3),0.25,60);
                             Note((B,2),0.125,60); Note((A,2),0.25,60);
                             Note((E,3),0.375,60); Note((D,3),0.125,60)];;
 
+output_midi "test3.mid" 504 (pair part1 
+   (pair (shift_start 2.0 part2) 
+        (pair (shift_start 1.5 part3) part4)));;
+
+let bottom = list_to_stream [Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.375);
+
+                             Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+
+                             Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+                             Note((F,2),0.125,60);Rest(0.125);
+                             Note((C,3),0.125,60);Rest(0.125);
+
+                             Note((G,2),0.125,60);Rest(0.125);
+                             Note((D,3),0.125,60);Rest(0.125);
+                             Note((G,2),0.125,60);Rest(0.125);
+                             Note((D,3),0.125,60);Rest(0.125);
+ 
+Note((G,2),0.125,60);Rest(0.125);
+                             Note((D,3),0.125,60);Rest(0.125);
+                             Note((G,2),0.125,60);Rest(0.125);
+                             Note((D,3),0.125,60);Rest(0.25);];;
+
+let top = list_to_stream [Rest(0.125);Note((C,4),0.125,60);Note((D,4),0.125,60);
+                          Note((Eb,4),0.125,60);Note((E,4),0.125,60);
+                          Rest(0.125);Note((A,4),0.125,60);
+                          Note((E,4),0.125,60);Rest(0.125);
+                          Note((C,4),0.125,60);Note((D,4),0.125,60);
+                          Note((Eb,4),0.125,60);Note((E,4),0.125,60);
+                          Rest(0.125);Note((A,4),0.125,60);
+                          Note((E,4),0.125,60);Rest(0.125);
+                         
+                          (*Note((A,4),0.125,60);
+                          Note((E,4),0.125,60);Rest(0.125);*)
+                          Note((C,4),0.125,60);Note((D,4),0.125,60);
+                          Note((E,4),0.125,60);
+                          (*third*)
+                          Note((F,4),0.125,60);Note((B,3),0.125,60);
+                          Note((D,4),0.125,60);Note((F,4),0.125,60);
+                          Note((A,4),0.125,60);Note((C,4),0.125,60);
+                          Rest(0.125);Note((C,5),0.125,60);
+                          Note((Bb,4),0.125,60);Note((F,4),0.125,60);Rest(0.25)
+                         ];;
+
+output_midi "funfundayo.mid" 504 (pair bottom (shift_start 3.5 top));;
+
 (*>* Problem 3.5 *>*)
 (* Please give us an honest estimate of how long this part took 
  * you to complete.  We care about your responses and will use
  * them to help guide us in creating future assignments. *)
-let minutes_spent : int = -1
+let minutes_spent : int = 120;; (* Took more to play with the music though! I turned
+Fun Fun Dayo! (Albeit a crappy conversion) *)
