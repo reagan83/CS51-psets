@@ -44,14 +44,14 @@ object (self)
   (********************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
+
+  method get_name = "flower"
 
   (* ### TODO: Part 4 Aging ### *)
-  method draw = raise TODO
+  method draw = self#draw_circle (Graphics.rgb 255 150 255) Graphics.black ""
 
-  method draw_z_axis = raise TODO
-*)
+  method draw_z_axis = 1
+
 
   (* ### TODO: Part 3 Actions ### *)
 

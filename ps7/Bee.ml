@@ -57,14 +57,14 @@ object (self)
   (********************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
+
+  method get_name = "bee"
 
   (* ### TODO: Part 4 Aging ### *)
-  method draw = raise TODO
+  method draw = self#draw_circle (Graphics.yellow) Graphics.black ""
 
-  method draw_z_axis = raise TODO
-*)
+  method draw_z_axis = 2
+
 
   (* ### TODO: Part 3 Actions ### *)
 

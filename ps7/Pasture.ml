@@ -33,13 +33,13 @@ object (self)
   (********************************)
 
   (* ### TODO Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
 
-  method draw = raise TODO
+  method get_name = "pasture"
 
-  method draw_z_axis = raise TODO
-*)
+  method draw = self#draw_circle (Graphics.rgb 70 100 130) Graphics.white "P"
+
+  method draw_z_axis = 1
+
 
 end
 

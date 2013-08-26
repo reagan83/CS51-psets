@@ -11,14 +11,14 @@ object (self)
   (********************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
 
-  method draw = raise TODO
+  method get_name = "pond"
 
-  method draw_z_axis = raise TODO
+  method draw = self#draw_circle Graphics.blue Graphics.black ""
 
-  method is_obstacle = raise TODO
-*)
+  method draw_z_axis = 1
+
+  method is_obstacle = true
+
 
 end

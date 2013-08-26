@@ -33,13 +33,13 @@ object (self)
   (********************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
 
-  method draw = raise TODO
+  method get_name = "cave"
 
-  method draw_z_axis = raise TODO
-*)
+  method draw = self#draw_circle (Graphics.black) Graphics.white "C"
+
+  method draw_z_axis = 1
+
 
   (* ### TODO: Part 6 Custom Events *)
 

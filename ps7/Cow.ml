@@ -38,13 +38,13 @@ object (self)
   (********************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
 
-  method draw = raise TODO
+  method get_name = "cow"
 
-  method draw_z_axis = raise TODO
-*)
+  method draw = self#draw_circle (Graphics.rgb 180 140 255) Graphics.black ""
+
+  method draw_z_axis = 4
+
 
   (* ### TODO: Part 3 Actions ### *)
 

@@ -50,13 +50,13 @@ object (self)
   (****************************)
 
   (* ### TODO: Part 1 Basic ### *)
-(*
-  method get_name = raise TODO
 
-  method draw = raise TODO
+  method get_name = "hive"
 
-  method draw_z_axis = raise TODO
-*)
+  method draw = self#draw_circle (Graphics.cyan) Graphics.black ""
+
+  method draw_z_axis = 1
+
 
   (* ### TODO: Part 3 Actions ### *)
 
