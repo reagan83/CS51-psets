@@ -24,10 +24,10 @@ let gen_pasture hive =
   ignore (new Pasture.pasture (World.size-1,World.size-1))
 
 let gen_bear hive =
-  ignore (new Bear.bear (0,0))
+  ignore (new Bear.bear (0,0) hive)
 
 let gen_cow hive =
-  ignore (new Cow.cow (World.size-1,World.size-1))
+  ignore (new Cow.cow (World.size-1,World.size-1) hive)
 
 let gen_hive () =
   (* Do not ignore, since we will need to pass the hive to some other objects. *)

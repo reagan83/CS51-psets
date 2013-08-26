@@ -1,6 +1,6 @@
 open WorldObject
 open WorldObjectI
-
+open Movable
 (* ### Part 2 Movement ### *)
 let bee_inverse_speed = Some 1
 
@@ -16,9 +16,9 @@ let max_sensing_range = 5
 (** Bees travel the world searching for honey.  They are able to sense flowers
     within close range, and they will return to the hive once they have
     pollenated enough species of flowers. *)
-class bee p : world_object_i =
+class bee p : movable_t =
 object (self)
-  inherit world_object p as super
+  inherit movable p bee_inverse_speed as super
 
   (******************************)
   (***** Instance Variables *****)
@@ -73,9 +73,9 @@ object (self)
   (***************************)
 
   (* ### TODO: Part 2 Movement ### *)
-(*
-  method next_direction = raise TODO
-*)
+
+  method next_direction = Some(Direction.random World.rand)
+
 
   (* ### TODO: Part 5 Smart Bees ### *)
 
