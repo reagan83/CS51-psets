@@ -11,5 +11,6 @@ object (self)
   (***************************)
 
   (* ### TODO: Part 4 Aging ### *)
-
+  method draw_picture =  self#draw_circle (Graphics.rgb 150 150 150) 
+         Graphics.black (String.sub name 0 1)
 end

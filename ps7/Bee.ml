@@ -1,6 +1,7 @@
 open WorldObject
 open WorldObjectI
-open Movable
+open Ageable
+open CarbonBased
 (* ### Part 2 Movement ### *)
 let bee_inverse_speed = Some 1
 
@@ -16,9 +17,10 @@ let max_sensing_range = 5
 (** Bees travel the world searching for honey.  They are able to sense flowers
     within close range, and they will return to the hive once they have
     pollenated enough species of flowers. *)
-class bee p : movable_t =
+class bee p : ageable_t =
 object (self)
-  inherit movable p bee_inverse_speed as super
+  inherit carbon_based p bee_inverse_speed 
+          (World.rand bee_lifetime) bee_lifetime as super
 
   (******************************)
   (***** Instance Variables *****)
@@ -77,7 +79,7 @@ object (self)
   method get_name = "bee"
 
   (* ### TODO: Part 4 Aging ### *)
-  method draw = self#draw_circle (Graphics.yellow) Graphics.black (string_of_int (List.length pollenlist))
+  method draw_picture = self#draw_circle (Graphics.yellow) Graphics.black (string_of_int (List.length pollenlist))
 
   method draw_z_axis = 2
 

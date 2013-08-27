@@ -45,7 +45,13 @@ object (self)
   (* ### TODO: Part 3 Actions ### *)
   method private do_action () = 
         Helpers.with_inv_probability (World.rand) pollen_probability
-               (fun () ->pollen_count<-pollen_count+1;()) ;()
+               (fun () ->pollen_count<-pollen_count+1;()) ;
+        Helpers.with_inv_probability (World.rand) spawn_probability
+         (fun()->
+            if pollen_count >= cost_of_bee then
+              (pollen_count<-pollen_count-cost_of_bee;self#generate_bee;())
+            else ()
+         );()
 
   (* ### TODO: Part 4 Aging ### *)
 
@@ -54,6 +60,8 @@ object (self)
   (**************************)
 
   (* ### TODO: Part 4 Aging ### *)
+  method private generate_bee =
+   World.spawn 1 (self#get_pos) (fun p ->ignore(new Bee.bee p);());
 
   (* ### TODO: Part 5 Smart Bees ### *)
 

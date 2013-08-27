@@ -1,6 +1,8 @@
 open WorldObject
 open WorldObjectI
 open Helpers
+open CarbonBased
+open Ageable
 (* ### Part 3 Actions ### *)
 let next_pollen_id = ref 0
 let get_next_pollen_id () =
@@ -17,9 +19,9 @@ let flower_lifetime = 2000
 
 (** Flowers produce pollen.  They will also eventually die if they are not cross
     pollenated. *)
-class flower p pollen_id: world_object_i =
+class flower p pollen_id: ageable_t =
 object (self)
-  inherit world_object p as super
+  inherit carbon_based p None (World.rand flower_lifetime) flower_lifetime as super
 
   (******************************)
   (***** Instance Variables *****)
@@ -62,8 +64,8 @@ object (self)
   method get_name = "flower"
 
   (* ### TODO: Part 4 Aging ### *)
-  method draw = self#draw_circle (Graphics.rgb 255 150 255) Graphics.black 
-                        (string_of_int pollen_to_offer)
+  method draw_picture = self#draw_circle (Graphics.rgb 255 150 255) 
+                        Graphics.black (string_of_int pollen_to_offer)
 
   method draw_z_axis = 1
 
@@ -74,8 +76,6 @@ object (self)
          Some (pollen_to_offer)
        else 
          None
-
-  method private bloom = World.spawn 1 self#get_pos 
   
   method forfeit_pollen =
      if pollen_to_offer>0 && (Random.int forfeit_pollen_probability)=0 then 
@@ -87,5 +87,9 @@ object (self)
   (***************************)
 
   (* ### TODO: Part 4 Aging ### *)
+  method receive_pollen lst = 
+    if List.exists (fun x -> pollen_id<>x) lst then 
+         (self#reset_life; lst)
+    else lst
 
 end
