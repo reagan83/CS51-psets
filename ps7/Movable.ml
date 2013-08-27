@@ -22,7 +22,8 @@ object (self)
   (***********************)
   initializer
      match inv_speed with
-     | Some x -> self#register_handler (Event.buffer x World.move_event) self#do_move
+     | Some x -> self#register_handler (Event.buffer x World.move_event) 
+         self#do_move
      | None -> ()
 
   (* ### TODO: Part 2 Movement ### *)

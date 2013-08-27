@@ -25,7 +25,7 @@ object (self)
   (******************************)
 
   (* ### TODO: Part 3 Actions ### *)
-
+  val mutable pollenlist = []
   (* ### TODO: Part 5 Smart Bees ### *)
 
   (* ### TODO: Part 6 Custom Events ### *)
@@ -35,6 +35,8 @@ object (self)
   (***********************)
 
   (* ### TODO: Part 3 Actions ### *)
+  initializer
+     self#register_handler World.action_event self#do_action
 
   (* ### TODO: Part 6 Custom Events ### *)
 
@@ -49,7 +51,21 @@ object (self)
   (**************************)
 
   (* ### TODO: Part 3 Actions ### *)
+  method private deposit_pollen x =
+   pollenlist<-x#receive_pollen pollenlist
+  
+  method private extract_pollen x =
+   match x#forfeit_pollen with 
+   |Some x -> ignore(pollenlist<-x::pollenlist); ()
+   |None-> ()
 
+  method private do_action () =
+    ignore(
+    List.map self#deposit_pollen (World.objects_within_range self#get_pos 0)); 
+    ignore(
+    List.map self#extract_pollen (World.objects_within_range self#get_pos 0));
+    ()
+ 
   (* ### TODO: Part 5 Smart Bees ### *)
 
   (********************************)
@@ -61,7 +77,7 @@ object (self)
   method get_name = "bee"
 
   (* ### TODO: Part 4 Aging ### *)
-  method draw = self#draw_circle (Graphics.yellow) Graphics.black ""
+  method draw = self#draw_circle (Graphics.yellow) Graphics.black (string_of_int (List.length pollenlist))
 
   method draw_z_axis = 2
 

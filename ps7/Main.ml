@@ -15,7 +15,7 @@ let gen_flowers () : unit =
   let pollen_id = ref (-1) in
   World.spawn_iter num_flowers flower_size
                    (fun () -> pollen_id := Flower.get_next_pollen_id ())
-                   (fun p -> ignore (new Flower.flower p (* !pollen_id *)))
+                   (fun p -> ignore (new Flower.flower p !pollen_id ))
 
 let gen_cave hive =
   ignore (new Cave.cave (0,0))
@@ -36,13 +36,13 @@ let gen_hive () =
 (* Initializer functions *)
 let part1_initializer () : unit =
   ignore (new Pond.pond (0,0)) ;
-  ignore (new Flower.flower (1,1)) ;
+  ignore (new Flower.flower (1,1) 0) ;
   let hive = new Hive.hive (2,2) in
   ignore (new Bee.bee (3,3)) ;
   ignore (new Cave.cave (4,4)) ;
-  ignore (new Bear.bear (5,5)) ;
+  ignore (new Bear.bear (5,5) hive) ;
   ignore (new Pasture.pasture (6,6)) ;
-  ignore (new Cow.cow (7,7));
+  ignore (new Cow.cow (7,7) hive);
   ignore hive
 
 let part2_initializer () : unit =

@@ -8,18 +8,25 @@ let spawn_probability = 20
 let pollen_probability = 50
 let max_pollen_deposit = 3
 
+class type hive_i =
+object 
+  inherit world_object_i
+
+  method forfeit_honey : int -> world_object_i -> int
+end
+	
 (** A hive will spawn bees and serve as a deposit point for the pollen that bees
     harvest.  It is possible to steal honey from a hive, however the hive will
     signal that it is in danger and its loyal bees will become angry. *)
-class hive p : world_object_i =
+class hive p : hive_i =
 object (self)
   inherit world_object p as super
-
   (******************************)
   (***** Instance Variables *****)
   (******************************)
 
   (* ### TODO: Part 3 Actions ### *)
+  val mutable pollen_count = starting_pollen
 
   (* ### TODO: Part 6 Custom Events ### *)
 
@@ -28,12 +35,17 @@ object (self)
   (***********************)
 
   (* ### TODO: Part 3 Actions ### *)
+  initializer
+     self#register_handler World.action_event self#do_action
 
   (**************************)
   (***** Event Handlers *****)
   (**************************)
 
   (* ### TODO: Part 3 Actions ### *)
+  method private do_action () = 
+        Helpers.with_inv_probability (World.rand) pollen_probability
+               (fun () ->pollen_count<-pollen_count+1;()) ;()
 
   (* ### TODO: Part 4 Aging ### *)
 
@@ -53,12 +65,23 @@ object (self)
 
   method get_name = "hive"
 
-  method draw = self#draw_circle (Graphics.cyan) Graphics.black ""
+  method draw = self#draw_circle (Graphics.cyan) Graphics.black 
+                     (string_of_int pollen_count)
 
   method draw_z_axis = 1
 
 
   (* ### TODO: Part 3 Actions ### *)
+  method forfeit_honey (n:int) (o:world_object_i) =
+     self#danger o;
+     if n > pollen_count then 
+       let c = pollen_count in 
+       pollen_count<-0; c
+     else
+       (pollen_count<-pollen_count-n; n)
+
+   method receive_pollen lst = 
+      pollen_count<-pollen_count+(min max_pollen_deposit (List.length lst));[]
 
   (* ### TODO: Part 6 Custom Events ### *)
 
