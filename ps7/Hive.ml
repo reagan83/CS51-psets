@@ -61,7 +61,15 @@ object (self)
 
   (* ### TODO: Part 4 Aging ### *)
   method private generate_bee =
-   World.spawn 1 (self#get_pos) (fun p ->ignore(new Bee.bee p);());
+   (*if Rand.int 1 = 0 then*)
+   World.spawn 1 (self#get_pos) 
+   (fun p ->
+     if Random.int 2 = 0 then
+       (ignore(new BeeBouncy.bee_bouncy p (self:>world_object_i));())
+     else  
+       (ignore(new BeeRandom.bee_random p (self:>world_object_i));())
+   );
+   (*else ()*)
 
   (* ### TODO: Part 5 Smart Bees ### *)
 

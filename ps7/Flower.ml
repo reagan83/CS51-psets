@@ -73,7 +73,7 @@ object (self)
   (* ### TODO: Part 3 Actions ### *)
   method smells_like_pollen = 
        if (pollen_to_offer > 0) then
-         Some (pollen_to_offer)
+         Some (pollen_id)
        else 
          None
   

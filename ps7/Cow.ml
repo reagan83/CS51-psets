@@ -37,7 +37,7 @@ object (self)
   (* ### TODO: Part 3 Actions ### *)
   method private do_action () = 
       ignore(List.map 
-        (fun x ->x#die;Printf.printf "*nom* "; num_of_eaten<-num_of_eaten+1) 
+        (fun x ->x#die;Printf.printf "*nom* ";flush_all();num_of_eaten<-num_of_eaten+1) 
         (World.objects_within_range self#get_pos 0));
   
   (* ### TODO: Part 6 Custom Events ### *)

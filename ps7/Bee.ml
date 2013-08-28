@@ -14,10 +14,17 @@ let bee_lifetime = 1000
 (* ### Part 5 Smart Bees ### *)
 let max_sensing_range = 5
 
+class type bee_t =
+object 
+  inherit Ageable.ageable_t
+  
+  method private next_direction_default : Direction.direction option
+end 
+
 (** Bees travel the world searching for honey.  They are able to sense flowers
     within close range, and they will return to the hive once they have
     pollenated enough species of flowers. *)
-class bee p : ageable_t =
+class bee p (home:world_object_i) : bee_t =
 object (self)
   inherit carbon_based p bee_inverse_speed 
           (World.rand bee_lifetime) bee_lifetime as super
@@ -29,7 +36,8 @@ object (self)
   (* ### TODO: Part 3 Actions ### *)
   val mutable pollenlist = []
   (* ### TODO: Part 5 Smart Bees ### *)
-
+  val sensing_range = World.rand max_sensing_range
+  val pollen_types = World.rand max_pollen_types + 1
   (* ### TODO: Part 6 Custom Events ### *)
 
   (***********************)
@@ -69,6 +77,16 @@ object (self)
     ()
  
   (* ### TODO: Part 5 Smart Bees ### *)
+  method private magnet_flower :world_object_i option =
+    let flowerlist = (List.filter (
+     fun arg -> match arg#smells_like_pollen with 
+     |Some x -> not(List.mem x pollenlist)
+     |None -> false
+   ) (World.objects_within_range self#get_pos sensing_range)) in
+   if (List.length flowerlist > 0) then
+     Some (List.nth flowerlist 0)
+   else None
+   
 
   (********************************)
   (***** WorldObjectI Methods *****)
@@ -92,8 +110,13 @@ object (self)
 
   (* ### TODO: Part 2 Movement ### *)
 
-  method next_direction = Some(Direction.random World.rand)
-
+  method next_direction = 
+    if List.length pollenlist >= pollen_types then 
+      World.direction_from_to self#get_pos home#get_pos
+    else 
+    match self#magnet_flower with
+    |Some x -> World.direction_from_to self#get_pos x#get_pos
+    |None -> self#next_direction_default
 
   (* ### TODO: Part 5 Smart Bees ### *)
 
@@ -104,5 +127,5 @@ object (self)
   (***********************)
 
   (* ### TODO: Part 5 Smart Bees ### *)
-
+  method private next_direction_default = None
 end
