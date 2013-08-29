@@ -11,7 +11,7 @@ let max_consumed_objects = 100
 
 (** Cows will graze across the field until it has consumed a satisfactory number
     of flowers *)
-class cow p (hive:hive_i) : movable =
+class cow p (hive:hive_i) home : movable =
 object (self)
   inherit movable p cow_inverse_speed as super
 
@@ -36,8 +36,11 @@ object (self)
 
   (* ### TODO: Part 3 Actions ### *)
   method private do_action () = 
+      (* home#get_pos = self#get_pos && not(self#hungry) then self#die
+      else*)
       ignore(List.map 
-        (fun x ->x#die;Printf.printf "*nom* ";flush_all();num_of_eaten<-num_of_eaten+1) 
+        (fun x ->if x#smells_like_pollen <> None && self#hungry then
+      x#die;Printf.printf "*nom* ";flush_all();num_of_eaten<-num_of_eaten+1) 
         (World.objects_within_range self#get_pos 0));
   
   (* ### TODO: Part 6 Custom Events ### *)
@@ -64,11 +67,17 @@ object (self)
 
   (* ### TODO: Part 2 Movement ### *)
 
-  method next_direction = if ((Random.int World.size)<=2) then 
-                               World.direction_from_to self#get_pos hive#get_pos
-                          else Some(Direction.random Random.int)
+  method next_direction = 
+     if not(self#hungry) then(
+        World.direction_from_to self#get_pos home#get_pos
+     )
+     else (
+        if ((Random.int World.size)<=2) then 
+            World.direction_from_to self#get_pos hive#get_pos
+        else Some(Direction.random Random.int)
+     )
 
 
   (* ### TODO: Part 6 Custom Events ### *)
-
+  method private hungry = num_of_eaten < max_consumed_objects
 end

@@ -1,6 +1,6 @@
 open WorldObject
 open WorldObjectI
-
+open Event
 (* ### Part 3 Actions ### *)
 let starting_pollen = 500
 let cost_of_bee = 10
@@ -11,6 +11,10 @@ let max_pollen_deposit = 3
 class type hive_i =
 object 
   inherit world_object_i
+
+  method get_pollen_event : unit Event.event
+  
+  method get_pollen : int 
 
   method forfeit_honey : int -> world_object_i -> int
 end
@@ -29,6 +33,7 @@ object (self)
   val mutable pollen_count = starting_pollen
 
   (* ### TODO: Part 6 Custom Events ### *)
+  val pollen_event = Event.new_event ()
 
   (***********************)
   (***** Initializer *****)
@@ -36,7 +41,7 @@ object (self)
 
   (* ### TODO: Part 3 Actions ### *)
   initializer
-     self#register_handler World.action_event self#do_action
+     (self#register_handler World.action_event self#do_action);
 
   (**************************)
   (***** Event Handlers *****)
@@ -97,9 +102,11 @@ object (self)
        (pollen_count<-pollen_count-n; n)
 
    method receive_pollen lst = 
+      ignore (Event.fire_event self#get_pollen_event ());
       pollen_count<-pollen_count+(min max_pollen_deposit (List.length lst));[]
 
   (* ### TODO: Part 6 Custom Events ### *)
+   method get_pollen = pollen_count
 
   (************************)
   (***** Hive Methods *****)
@@ -108,5 +115,6 @@ object (self)
   (* ### TODO: Part 3 Actions ### *)
 
   (* ### TODO: Part 6 Custom Events ### *)
+   method get_pollen_event = pollen_event
 
 end

@@ -39,6 +39,7 @@ object (self)
   val sensing_range = World.rand max_sensing_range
   val pollen_types = World.rand max_pollen_types + 1
   (* ### TODO: Part 6 Custom Events ### *)
+  val mutable target = None
 
   (***********************)
   (***** Initializer *****)
@@ -46,8 +47,9 @@ object (self)
 
   (* ### TODO: Part 3 Actions ### *)
   initializer
-     self#register_handler World.action_event self#do_action
-
+     (self#register_handler World.action_event self#do_action);
+     (self#register_handler home#get_danger_event self#danger_handler);
+      
   (* ### TODO: Part 6 Custom Events ### *)
 
   (**************************)
@@ -55,6 +57,12 @@ object (self)
   (**************************)
 
   (* ### TODO: Part 6 Custom Events ### *)
+  method private danger_handler o =
+     ignore(target<-Some o;
+     self#register_handler o#get_die_event self#removetarget)
+  
+  method private removetarget () =
+     ignore(target<-None);
 
   (**************************)
   (***** Helper Methods *****)
@@ -70,11 +78,18 @@ object (self)
    |None-> ()
 
   method private do_action () =
+    let helper () = 
     ignore(
-    List.map self#deposit_pollen (World.objects_within_range self#get_pos 0)); 
+     List.map self#deposit_pollen (World.objects_within_range self#get_pos 0)); 
     ignore(
-    List.map self#extract_pollen (World.objects_within_range self#get_pos 0));
+     List.map self#extract_pollen (World.objects_within_range self#get_pos 0));
     ()
+    in
+    match target with
+    | Some x -> (if x#get_pos = self#get_pos then
+                  ignore(x#receive_sting;self#die));helper ();
+    | None -> helper();
+   
  
   (* ### TODO: Part 5 Smart Bees ### *)
   method private magnet_flower :world_object_i option =
@@ -111,6 +126,9 @@ object (self)
   (* ### TODO: Part 2 Movement ### *)
 
   method next_direction = 
+    match target with
+    | Some x -> World.direction_from_to self#get_pos x#get_pos
+    | None ->
     if List.length pollenlist >= pollen_types then 
       World.direction_from_to self#get_pos home#get_pos
     else 
