@@ -1,0 +1,762 @@
+<!DOCTYPE>
+<head>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script src="ckeditor/ckeditor.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script>
+    $( document ).ready( function() {
+      CKEDITOR.inline("main", {
+        extraPlugins: 'sourcedialog,codemirror'
+      });
+      $('#main').attr('contenteditable','true');
+    });
+</script>
+<h1>
+  CS51 and CSCI-250 Final Examination
+</h1>
+<h2><a href="http://cs51.seas.harvard.edu/docs/past-exams/2013/final.pdf">Finals PDF</a> - 
+<a href="http://cs51.seas.harvard.edu/docs/past-exams/2013/final-soln.txt">Solution Set</a></h2>
+<h2>Self Assesed Grade: 95 / 100</h2>
+  <div id='main'><h1>
+<div>
+  <div>
+    This is a closed book, no-computer, no calculator, no smart-phone, no cow, do it all by
+  </div>
+  <div>
+    yourself exam.
+  </div>
+  <div>
+    There are seven questions, most with sub-questions. Make sure to answer all of them.
+  </div>
+  <div>
+    Write your answers in the provided books (or if you&rsquo;re taking the exam with a proctor, use
+  </div>
+  <div>
+    whatever paper you brought with you.) Make sure to write your name on each book that
+  </div>
+  <div>
+    you use to record your answers. Make sure to write legibly. Good luck!
+  </div>
+</div>
+<p>
+  &nbsp;
+</p>
+<ol>
+  <li>
+    <div>
+      [3 points each, 21 points total] Using a sentence or two, explain each of the following
+    </div>
+    <div>
+      terms in the context of this class.
+    </div>
+    <ol>
+      <li>higher-order function
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;A Higher Order Function is a function that takes a function as a parameter and produces another function
+        </div>
+      </li>
+      <li>mutex lock
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;Mutex Lock - Mutual Exclusion Lock, so that threads do not access the same resource at the same time.
+        </div>
+      </li>
+      <li>sub-classing (also known as inheritance)
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;Inheritance is so to speak a way to &#39;inherit&#39; methods from another class so as to reuse code.
+        </div>
+      </li>
+      <li>parametric polymorphism
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;A function that allows&nbsp;any type as a paremeter (e.g. &#39;a in ocaml)
+        </div>
+      </li>
+      <li>busy waiting
+        <div class="alert">
+          <strong>Answer:</strong> Occurs when a thread repeatedly checks if an action occured (e.g polling) which can be bad since it uses resources.
+        </div>
+      </li>
+      <li>overriding
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;Overriding refers to the &#39;redefining&#39; the method implementation of an inherited class, therefore overriding the parent&#39;s definition.
+        </div>
+      </li>
+      <li>event listener
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;A Listener for Events! A function that is called whenever an event fires.
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>. [2 points each, 16 points total] Answer True or False for each of the following questions.
+    <ol>
+      <li>If a computation runs in O(2n+3n2+10) time, then it also runs in O(n) time.
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;false
+        </div>
+      </li>
+      <li>
+        <div>
+          We can implement an imperative queue where the enqueueand dequeue
+        </div>
+        <div>
+          operations take worst case time O(1).
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;true
+        </div>
+      </li>
+      <li>
+        <div>
+          The parallel merge-sort algorithm shown in class takes time O(lg n) if we have n
+        </div>
+        <div>
+          processors.
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;false
+        </div>
+      </li>
+      <li>A deadlock occurs when two or more threads try to acquire the same lock.
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;true
+        </div>
+      </li>
+      <li>
+        <div>
+          Suppose class D does not inherit from class C. Suppose further that objects
+        </div>
+        <div>
+          generated from class C have type T. Then objects generated from D cannot have
+        </div>
+        <div>
+          a sub-type of T.
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;false
+        </div>
+      </li>
+      <li>It&#39;s impossible to get a race condition when we use purely functional code.
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;true
+        </div>
+      </li>
+      <li>
+        <div>
+          Suppose f is a purely functionalOCaml function with type unit-&gt;int. Then
+        </div>
+        <div>
+          f returns the same integer each time we call it.
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;true
+        </div>
+      </li>
+      <li>
+        <div>
+          Determining whether two balanced, binary trees of n bignums are equal can be
+        </div>
+        <div>
+          done in O(n) time.
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;false
+        </div>
+      </li>
+      <li>
+        <div>
+          [0 points] The answer to this question is &quot;false&quot;.
+        </div>
+        <div class="alert">
+          <strong>Answer:&nbsp;</strong><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">Paradox!?</span>
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>
+      [4 points each, 24 points total] For each of the following OCaml expressions, give code
+    </div>
+    <div>
+      that when substituted for the &lsquo;???&rsquo; causes the whole expression to evaluate to 42, or
+    </div>
+    <div>
+      else argue that the program cannot be made to evaluate to 42. Your code should avoid
+    </div>
+    <div>
+      shadowing any of the defined variables (e.g., your code should not include a &ldquo;let&rdquo;.)
+    </div>
+    <ol>
+      <li><code>
+        let x = ref 0 in
+        <br />
+        let f () = !x in
+        <br />
+        let x = ref x in
+        <br />
+        ??? ; f() 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp; 
+          <code>
+            (!x) := 42 
+          </code>
+        </div>
+      </li>
+      <li><code>
+        let x = ref 0 in
+        <br />
+        let f () = !x in
+        <br />
+        let x = ref 42 in
+        <br />
+        ??? ; f() 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;Cannot be made to 42, x in line is&nbsp;
+        </div>
+      </li>
+      <li><code>
+        let f x = x := (!x) + 1 in
+        <br />
+        let y = ref 0 in
+        <br />
+        List.map f ??? 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;[]; 42&nbsp;
+        </div>
+      </li>
+      <li><code>
+        type ilist = Nil | Cons of (int * ilist) ref&nbsp;
+        <br />
+        let f (x:ilist) =
+        <br />
+        match x with
+        <br />
+        | Nil -&gt; 0
+        <br />
+        | Cons r -&gt; (let (i,t) = !r in
+        <br />
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; match t with
+        <br />
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Nil -&gt; 1
+        <br />
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Cons s -&gt; if r == s then i else 2)&nbsp;
+        <br />
+        in
+        <br />
+        f (let f = ??? in ???) 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;let f =&nbsp;Cons(ref(42, Nil)) in (match f with | Cons r -&gt; r := (42, f) | Nil-&gt; Invalid_argument &quot;Impossible&quot;); f
+        </div>
+      </li>
+      <li><code>
+        class c = object&nbsp;
+        <br />
+        method x = 41
+        <br />
+        end
+        <br />
+        class d = object&nbsp;
+        <br />
+        ???&nbsp;
+        <br />
+        method x = bob#x + 1
+        <br />
+        end
+        <br />
+        (new d)#x 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;inherit c as bob
+        </div>
+      </li>
+      <li><code>
+        class c = object
+        <br />
+        val mutable x = ref 0
+        <br />
+        method get = !x
+        <br />
+        method set y = x &lt;- y
+        <br />
+        end
+        <br />
+        let v = new c in ??? ; v#get 
+        </code>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;v#set (ref 42)
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>[15 points total, 5 each] Consider the following module interfaces for numbers.
+    <div>
+      <code>
+        <kbd>
+          module type SIMPLE_NUMBER =&nbsp; 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          sig 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          type bignum 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          val from_int : int -&gt; bignum 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          val minus : bignum -&gt; bignum -&gt; bignum 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          val less : bignum -&gt; bignum -&gt; bool 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          end 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          module type EXTENDED_NUMBER =&nbsp; 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          sig 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          include SIMPLE_NUMBER 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          val plus : bignum -&gt; bignum -&gt; bignum 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          val equal : bignum -&gt; bignum -&gt; bool 
+        </kbd>
+      </code>
+    </div>
+    <div>
+      <code>
+        <kbd>
+          end 
+        </kbd>
+      </code>
+    </div>
+    <p>
+      &nbsp;
+    </p>
+    <ol>
+      <li>
+        <div>
+          Write a functor that takes a SIMPLE_NUMBER module as an argument and
+        </div>
+        <div>
+          returns an EXTENDED_NUMBER module as a result. Keep your code as simple as
+        </div>
+        <div>
+          possible. We will even get you started:&nbsp;
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong> module Extend(S : SIMPLER_NUMBER) : EXTENDED_NUMBER =
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; struct
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; open S
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(* your definitions go here... *)
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;let plus x y = minus x (minus y (from_int 0))</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;let equal x y = not (less x y) &amp;&amp; not (less y x)</span>
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; end
+        </div>
+      </li>
+      <li>
+        <div>
+          In the Bignum problem set, we asked you to represent numbers with a very
+        </div>
+        <div>
+          strong representation invariant:there should be no leading zeros in the list of
+        </div>
+        <div>
+          digits, and the &quot;negative&quot; flag should never be set for zero. Explain how this
+        </div>
+        <div>
+          made some operations easier to implement, and others harder
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong> (* Wasn&#39;t the negative flag of type bool!? *)
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>The lack of leading zeroes made it easier to compare the bignums otherwise we would have to take the leading zeroes into account (which are for all intents and purposes nil). Made it harder for some operations which produced bignums though, since we have to make sure no leading zeros are produced.
+        </div>
+      </li>
+      <li>
+        <div>
+          Suppose we asked you to build an implementation of Rational numbers
+        </div>
+        <div>
+          (fractions) using a pair of Bignums (one for the numerator, one for the
+        </div>
+        <div>
+          denominator). What representation invariant(s) might you impose on your code
+        </div>
+        <div>
+          to make equality on Rationals easier?
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;Always Lowest Terms
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>
+      [13 pointstotal] We can describe an infinite, 2-dimensional plane of values using the
+    </div>
+    <div>
+      following recursive type definition:
+    </div>
+    <div>
+      <code>
+        open Lazy;; 
+      </code>
+    </div>
+    <div>
+      <code>
+        type &#39;a plane = { 
+      </code>
+    </div>
+    <div>
+      <code>
+        contents : &#39;a ;&nbsp; 
+      </code>
+    </div>
+    <div>
+      <code>
+        north : &#39;a plane lazy_t ; south : &#39;a plane lazy_t ;&nbsp; 
+      </code>
+    </div>
+    <div>
+      <code>
+        east : &#39;a plane lazy_t ; west : &#39;a plane lazy_t 
+      </code>
+    </div>
+    <div>
+      <code>
+        };; 
+      </code>
+    </div>
+    <div>
+      Each point contains some contents and links to the points north, south, east, and west.
+    </div>
+    <div>
+      Recall that applying the built-in primitive lazy to an expression e of type t yields a t&nbsp;
+    </div>
+    <div>
+      lazy_t, and delays the evaluation of e, whereas the primitive force takes a t&nbsp;
+    </div>
+    <div>
+      lazy_t, and forces the expression to be evaluated to produce a t.
+    </div>
+    <ol>
+      <li>
+        <div>
+          <div>
+            [3 points] Write a map function which when given a function f from &#39;a to &#39;b,
+          </div>
+          <div>
+            and an &#39;a plane, produces a &#39;b plane.
+          </div>
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;let map (f:&#39;a-&gt;&#39;b) (a:&#39;a plane) = {
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; contents = f a.contents,
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; north = lazy (map f (Lazy.force a.north)),
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; south = lazy (map f(Lazy.force a.south)),
+          <br />
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; east<span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp;= lazy (map f(Lazy.force a.east)),</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp;west&nbsp;= lazy (map f(Lazy.force a.west))</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span> &nbsp;}
+        </div>
+      </li>
+      <li>
+        <div>
+          <div>
+            [5 points] Write code to build the Cartesian plane. The Cartesian plane is an
+          </div>
+          <div>
+            (int * int) planewhere the pair of integers represents the X and Y
+          </div>
+          <div>
+            coordinates respectively of a point in the plane. Your plane should start with the
+          </div>
+          <div>
+            origin (0,0), and as we move east, the X coordinate should increase, while as
+          </div>
+          <div>
+            we move west, the X coordinate should decrease. Similarly, moving north should
+          </div>
+          <div>
+            cause the Y coordinate to increase, while moving south should cause the Y
+          </div>
+          <div>
+            coordinate to decrease.
+          </div>
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;<span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">let cart&nbsp;= {</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; contents = (0, 0)</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; north = lazy (map (fun (x,y)-&gt; (x, y+1)) cart),</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; south = lazy (map (fun (x,y)-&gt; (x, y-1)</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">) cart),</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; east&nbsp;= lazy (map (fun (x,y)-&gt; (x+1, y)</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">) cart),</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;west&nbsp;= lazy (map (fun (x,y)-&gt; (x-1, y)</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">) cart)</span>
+          <br />
+          <span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><span style="background-color:rgb(252, 248, 227); color:rgb(192, 152, 83)">&nbsp;&nbsp;}</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div>
+            [5 points] Suppose we are given a bool plane and we wish to determine
+          </div>
+          <div>
+            whether there is a true value in it somewhere. That is, we wish to write a
+          </div>
+          <div>
+            function that returns true if and only if the plane includes a true value anywhere
+          </div>
+          <div>
+            in the plane. Describe (in English or code) how you might do this, guaranteeing
+          </div>
+          <div>
+            that the function always terminates when there is a true value somewhere in the
+          </div>
+          <div>
+            plane. (Warning: there is no guarantee that moving one direction (c.f., east) and
+          </div>
+          <div>
+            then the opposite direction (c.f., west) gets you back to the a node with the same
+          </div>
+          <div>
+            contents.) &nbsp;&nbsp;
+          </div>
+        </div>
+        <div class="alert">
+          <strong>Answer:</strong>&nbsp;If going back to a step lead to the same node, it would be easy to do the same idea as if we were to fold the nodes. However, because we do not have this luxury, I guess what is possible is to use the same idea used on problem set 6, checking if a list is cyclic. What we could do is store nodes we have visited and their neighbors, and traverse them recursively and returning when we see true.
+        </div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>
+      . [10 points] Recall our interface for events:
+    </div>
+    <p>
+      <code>
+        type id 
+      </code>
+    </p>
+    <p>
+      <code>
+        type &#39;a event 
+      </code>
+    </p>
+    <p>
+      <code>
+        val new_event : unit -&gt; &#39;a event 
+      </code>
+    </p>
+    <p>
+      <code>
+        val add_listener : &#39;a event -&gt; (&#39;a -&gt; unit) -&gt; id 
+      </code>
+    </p>
+    <p>
+      <code>
+        val add_one_shot : &#39;a event -&gt; (&#39;a -&gt; unit) -&gt; id 
+      </code>
+    </p>
+    <p>
+      <code>
+        val remove_listener : &#39;a event -&gt; id -&gt; unit 
+      </code>
+    </p>
+    <p>
+      <code>
+        val fire_event : &#39;a event -&gt; &#39;a -&gt; unit 
+      </code>
+    </p>
+    <p>
+      <code>
+        val run : (unit -&gt; unit) -&gt; unit 
+      </code>
+    </p>
+    <p>
+      <code>
+        Suppose we are building a soda machine and the machine has a set of devices and 
+      </code>
+    </p>
+    <p>
+      <code>
+        actuators with the following interface: 
+      </code>
+    </p>
+    <p>
+      <code>
+        type soda = Coke | DietCoke | Sprite | MooJuice 
+      </code>
+    </p>
+    <p>
+      <code>
+        val coin_inserted : int event&nbsp; 
+      </code>
+    </p>
+    <p>
+      <code>
+        val cancel : unit event&nbsp; 
+      </code>
+    </p>
+    <p>
+      <code>
+        val soda_requested : soda event 
+      </code>
+    </p>
+    <p>
+      <code>
+        val return_money : int -&gt; unit 
+      </code>
+    </p>
+    <p>
+      <code>
+        val dispense_soda : soda -&gt; unit 
+      </code>
+    </p>
+    <div>
+      When the user inserts a coin into the machine, the coin_insertedevent is triggered
+    </div>
+    <div>
+      with the value of the coin (e.g., 5 for a nickel, 10 for a dime, etc.) If the user wishes to
+    </div>
+    <div>
+      cancel the transaction, then she presses the cancel button, triggering the cancelevent,
+    </div>
+    <div>
+      at which point, any money she has deposited should be returned to her via the
+    </div>
+    <div>
+      return_moneyoperation. When she presses a button for a soda, the
+    </div>
+    <div>
+      soda_requestedevent is triggered with the kind of soda she requested. If she has
+    </div>
+    <div>
+      deposited at least $1, then the soda should be given to her via the dispense_soda
+    </div>
+    <div>
+      operation, and any additional money should be returned to her via return_money.
+    </div>
+    <div>
+      Write a set of Ocaml definitions so that when we call the event run function, we get the
+    </div>
+    <div>
+      right behavior for the soda machine.&nbsp;
+    </div>
+    <div class="alert">
+      <strong>Answer:</strong>&nbsp;
+      <code>
+          <br />
+          (*Writing Ocaml here, I realized how much I love emacs!*)
+          <br/>
+          let money = ref 0 in
+          <br />
+          Event.add_listener coin_inserted (fun coins-> money := (!money+coins));
+          <br />
+          Event.add_listener cancel (fun () -> return_money (!money); money:=0);
+          <br />
+          Event.add_listener soda_requested (fun soda-> 
+          <br />
+          if !money > 100 then 
+          <br />
+          (dispense_soda soda; return_money (!money - 100));
+          <br/>
+          money :=0)
+      </code>
+    </div>
+  </li>
+  <li>[1 point] What is the super secret bonus answer?
+    <p>
+      &nbsp;
+    </p>
+    <div class="alert">
+      <strong>Answer:</strong>&nbsp;Cow!?
+    </div>
+  </li>
+</ol>
+<p>
+  &nbsp;
+</p>
+<p>
+  &nbsp;
+</p>
+<p>
+  &nbsp;
+</p>
+
+
+</div>
+</body>
